@@ -6,14 +6,21 @@ import com.openclassrooms.microservice_hospital.infra.model.HospitalBDD;
 import com.openclassrooms.microservice_hospital.infra.repository.HospitalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Service
 public class HospitalFetcher implements IFetchHospital {
-    @Autowired
+
+    //@Autowired
     HospitalRepository hospitalRepository;
+
+    @Autowired
+    public HospitalFetcher(HospitalRepository hospitalRepository) {
+        this.hospitalRepository = hospitalRepository;
+    }
 
     @Override
     public List<Hospital> getBySpeciality(String speciality) {

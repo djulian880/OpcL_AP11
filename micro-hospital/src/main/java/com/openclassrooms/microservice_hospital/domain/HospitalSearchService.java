@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
+@Service
 public class HospitalSearchService implements IReturnHospital {
     private final IFetchHospital fetchHospital;
 
