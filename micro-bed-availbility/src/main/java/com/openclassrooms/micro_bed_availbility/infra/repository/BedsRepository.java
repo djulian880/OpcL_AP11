@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface BedsRepository extends JpaRepository<Long, BedsEntity> {
+public interface BedsRepository extends JpaRepository<BedsEntity, Long> {
 
     @Query(value = """
         SELECT h.id, h.name, h.address
