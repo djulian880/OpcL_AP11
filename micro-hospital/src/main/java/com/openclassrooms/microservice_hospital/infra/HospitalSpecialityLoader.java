@@ -5,29 +5,41 @@ import ca.uhn.fhir.rest.client.api.IClientInterceptor;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.IHttpRequest;
 import ca.uhn.fhir.rest.client.api.IHttpResponse;
-import com.openclassrooms.microservice_hospital.infra.DTO.OrganizationDTO;
-import com.openclassrooms.microservice_hospital.infra.model.HospitalBDD;
+import ca.uhn.fhir.parser.*;
+import com.openclassrooms.microservice_hospital.infra.model.HospitalEntity;
+import com.openclassrooms.microservice_hospital.infra.model.SpecialityEntity;
 import com.openclassrooms.microservice_hospital.infra.repository.HospitalRepository;
+import com.openclassrooms.microservice_hospital.infra.repository.SpecialityRepository;
+import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
+import lombok.Getter;
+import lombok.Setter;
 import org.hl7.fhir.r4.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.net.URI;
+import java.net.http.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 @Service
-public class HospitalFHIRClient {
+public class HospitalSpecialityLoader {
 
     @Autowired
     HospitalRepository hospitalRepository;
 
+    @Autowired
+    SpecialityRepository specialityRepository;
+
 
     IGenericClient client;
 
-    public HospitalFHIRClient(){
+
+    public HospitalSpecialityLoader(){
         FhirContext ctx = FhirContext.forR4();
         client = ctx.newRestfulGenericClient("https://gateway.api.esante.gouv.fr/fhir");
 
@@ -42,17 +54,30 @@ public class HospitalFHIRClient {
         });
     }
 
-    public void retrieveAll() {
+    @PostConstruct
+    @Transactional
+    public void init() {
+        try {
+            loadSpecialitiesFromFHIR();
+            loadAllHospitals();
+        } catch (Exception e) {
+            System.err.println("Erreur chargement spécialités : " + e.getMessage());
+        }
+    }
 
 
-        List<OrganizationDTO> listOrganization=new ArrayList<>();
+
+    public void loadAllHospitals() {
+
+
+        List<Organization> listOrganization=new ArrayList<>();
 
         // Rechercher les établissements hospitaliers par département
         Bundle bundle = client.search()
-                .forResource(Organization.class)
-                .where(Organization.TYPE.exactly().code("355")) // Centre Hospitalier
-                .and(Organization.ADDRESS_POSTALCODE.matches().value("68"))  // Bas-Rhin
-                .and(Organization.ACTIVE.exactly().code("true"))
+                .forResource(org.hl7.fhir.r4.model.Organization.class)
+                .where(org.hl7.fhir.r4.model.Organization.TYPE.exactly().code("355")) // Centre Hospitalier
+                .and(org.hl7.fhir.r4.model.Organization.ADDRESS_POSTALCODE.matches().value("68"))  // Bas-Rhin
+                .and(org.hl7.fhir.r4.model.Organization.ACTIVE.exactly().code("true"))
                 .count(20)
                 .returnBundle(Bundle.class)
                 .execute();
@@ -61,10 +86,11 @@ public class HospitalFHIRClient {
         int count = 0;
         // Boucle sur toutes les pages
         while (bundle != null) {
+            //hospitalRepository.deleteAll();
             // Extraire les résultats de la page courante
             for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {
-                Organization org = (Organization) entry.getResource();
-                OrganizationDTO organizationDTO = new OrganizationDTO();
+                org.hl7.fhir.r4.model.Organization org = (org.hl7.fhir.r4.model.Organization) entry.getResource();
+                Organization organization = new Organization();
 
                 //System.out.println("Nom       : " + org.getName());
                 String adresse = "";
@@ -85,10 +111,10 @@ public class HospitalFHIRClient {
                 //System.out.println("Adresse   : " + adresse);
                 idHospital = org.getIdElement().getIdPart();
                 //System.out.println("Id  : " + idHospital);
-                organizationDTO.setName(org.getName());
-                organizationDTO.setId(idHospital);
-                organizationDTO.setAdress(adresse);
-                listOrganization.add(organizationDTO);
+                organization.setName(org.getName());
+                organization.setId(idHospital);
+                organization.setAdress(adresse);
+                listOrganization.add(organization);
                 //count++;
             }
             // Vérifier s'il existe une page suivante
@@ -101,108 +127,34 @@ public class HospitalFHIRClient {
             }
         }
 
-        for(OrganizationDTO organizationDTO : listOrganization){
-            ArrayList<String> specialties=retrieveSpecialtiesFromOrganization(organizationDTO);
-            if(specialties.size()>0){
-                HospitalBDD hospitalBDD = new HospitalBDD();
-                hospitalBDD.setAddress(organizationDTO.getAdress());
-                hospitalBDD.setName(organizationDTO.getName());
-                hospitalBDD.setSpecialities(specialties);
-                System.out.println(hospitalBDD.toString());
-                hospitalRepository.save(hospitalBDD);
+        for(Organization organization : listOrganization){
+            ArrayList<String> listSpecialties=retrieveSpecialtiesFromOrganization(organization);
+            if(listSpecialties.size()>0){
+                HospitalEntity hospitalEntity = new HospitalEntity();
+                hospitalEntity.setAddress(organization.getAdress());
+                hospitalEntity.setName(organization.getName());
+
+                Set<SpecialityEntity> specialities=new HashSet<>();
+                for(String speciality : listSpecialties){
+
+                    Optional<SpecialityEntity> optSpecialityEntity = specialityRepository.findByName(speciality);
+                    if(optSpecialityEntity.isPresent()){
+                        SpecialityEntity specialityEntity = optSpecialityEntity.get();
+                        specialities.add(specialityEntity);
+                    }
+
+                }
+                hospitalEntity.setSpecialities(specialities);
+                System.out.println(hospitalEntity.toString());
+                hospitalRepository.save(hospitalEntity);
             }
 
         }
         System.out.println("Terminé ");
 
-/*
-        List<String> listePraticiens=new ArrayList<String>();
-        String idPraticient="";
-        String idTotal="";
-        // Utilisation directe dans la requête suivante
-        Bundle praticiensRole = client.search()
-                .forResource(PractitionerRole.class)
-                .where(PractitionerRole.ORGANIZATION.hasId(idHospital))
-                .include(PractitionerRole.INCLUDE_PRACTITIONER)
-                .count(10)
-                .returnBundle(Bundle.class)
-                .execute();
-
-        while (praticiensRole != null) {
-            // Extraire les résultats de la page courante
-            for (Bundle.BundleEntryComponent entry : praticiensRole.getEntry()) {
-                try{
-                    PractitionerRole practitionerRole = (PractitionerRole) entry.getResource();
-                    System.out.println("****** Début ******: ");
-                    String idpractitionerRole=practitionerRole.getIdPart();
-                    System.out.println("idpractitionerRole: " + idpractitionerRole);
-                    String idRole=idpractitionerRole.substring(4);
-                    idRole=idRole.substring(0,idRole.indexOf("-"));
-                    System.out.println("idRole: " + idRole);
-
-                    idPraticient=practitionerRole.getPractitioner().getReferenceElement().getIdPart();
-                    System.out.println("getIdPart  : " + idPraticient);
-                    System.out.println("ID complet  : " + idPraticient+"-"+idRole);
-                    idTotal=idPraticient+"-"+idRole;
-
-
-                    listePraticiens.add(idTotal);
-                }
-                catch(Exception e){
-
-                }
-
-
-
-
-            }
-            // Vérifier s'il existe une page suivante
-            if (praticiensRole.getLink(Bundle.LINK_NEXT) != null) {
-                praticiensRole = client.loadPage()
-                        .next(praticiensRole)
-                        .execute();
-            } else {
-                praticiensRole = null; // fin de la pagination
-            }
-
-
-        }
-*/
-
-
-
-        //System.out.println("------///// idPraticienTotal retenu : " + idTotal);
-        // Utilisation directe dans la requête suivante
-        /*Practitioner practitioner = client.read()
-                .resource(Practitioner.class)
-                .withId(idTotal)
-                .execute();*/
-        /*
-        for(String idpersonne : listePraticiens) {
-            Practitioner practitioner = client.read()
-                    .resource(Practitioner.class)
-                    .withUrl("https://gateway.api.esante.gouv.fr/fhir/v2/Practitioner/"+idpersonne)
-                    .execute();
-
-            for (Practitioner.PractitionerQualificationComponent qualif : practitioner.getQualification()) {
-
-                for (Coding code : qualif.getCode().getCoding()) {
-                    if(code.getSystem().equals("https://mos.esante.gouv.fr/NOS/TRE_R38-SpecialiteOrdinale/FHIR/TRE-R38-SpecialiteOrdinale")){
-                        String spe=code.getDisplay();
-                        spe=spe.substring(0,spe.indexOf(" (SM)"));
-                        System.out.println("Système  : " + code.getSystem());
-                        System.out.println("Code     : " + code.getCode());
-                        System.out.println("Libellé  : " + spe);
-                        System.out.println("---");
-                    }
-
-                }
-
-            }
-        }*/
     }
 
-    public ArrayList<String> retrieveSpecialtiesFromOrganization(OrganizationDTO organizationDTO){
+    public ArrayList<String> retrieveSpecialtiesFromOrganization(Organization organization){
         //List<String> result;
         Set<String> set = new HashSet<String>(); // List → Set (supprime les doublons)
 
@@ -213,7 +165,7 @@ public class HospitalFHIRClient {
         // Utilisation directe dans la requête suivante
         Bundle praticiensRole = client.search()
                 .forResource(PractitionerRole.class)
-                .where(PractitionerRole.ORGANIZATION.hasId(organizationDTO.getId()))
+                .where(PractitionerRole.ORGANIZATION.hasId(organization.getId()))
                 .include(PractitionerRole.INCLUDE_PRACTITIONER)
                 .count(10)
                 .returnBundle(Bundle.class)
@@ -301,5 +253,61 @@ public class HospitalFHIRClient {
        // List<String> result = new ArrayList<>(set);
         return result;
     }
+
+
+    public void loadSpecialitiesFromFHIR() throws Exception {
+
+        // 1. Télécharger le fichier XML
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://mos.esante.gouv.fr/NOS/TRE_R38-SpecialiteOrdinale/FHIR/TRE-R38-SpecialiteOrdinale/TRE_R38-SpecialiteOrdinale-FHIR.xml"))
+                .header("Accept", "application/xml")
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if(response.statusCode() == 200){
+            hospitalRepository.deleteAll();
+            specialityRepository.deleteAll();
+            // 2. Parser le XML avec HAPI FHIR
+            FhirContext ctx = FhirContext.forR4();
+            IParser parser = ctx.newXmlParser();
+            CodeSystem codeSystem = parser.parseResource(CodeSystem.class, response.body());
+
+            // 3. Extraire les concepts (spécialités)
+            List<SpecialityEntity> specialities = codeSystem.getConcept().stream()
+                    .filter(concept -> concept.getDisplay() != null)
+                    .map(concept -> {
+                        SpecialityEntity entity = new SpecialityEntity();
+                        entity.setCode(concept.getCode());       // ex: "SM06"
+                        String display=concept.getDisplay();
+
+                        entity.setName(display.substring(0,display.indexOf(" (")));    // ex: "Oncologie"
+                        return entity;
+                    })
+                    .collect(Collectors.toList());
+
+            // 4. Sauvegarder en base (uniquement si pas déjà présent)
+            specialities.forEach(speciality ->
+                    specialityRepository.findByName(speciality.getName())
+                            .orElseGet(() -> specialityRepository.save(speciality))
+            );
+
+            System.out.println(specialities.size() + " spécialités chargées.");
+
+        }
+
+    }
+
+
+    @Getter
+    @Setter
+    public class Organization {
+        private String adress;
+        private String id;
+        private String name;
+    }
+
+
 
 }

@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
 @ToString
-public class HospitalBDD {
+public class HospitalEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,7 +22,7 @@ public class HospitalBDD {
 
     @Column(nullable = false)
     private String address;
-
+/*
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "hospital_specialities",         // nom de la table créée
@@ -28,7 +30,14 @@ public class HospitalBDD {
     )
     @Column(name = "speciality")
     private List<String> specialities = new ArrayList<>();
+*/
 
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "hospital_speciality",                          // table de liaison
+            joinColumns = @JoinColumn(name = "hospital_id"),       // FK vers hospital
+            inverseJoinColumns = @JoinColumn(name = "speciality_id") // FK vers speciality
+    )
+    private Set<SpecialityEntity> specialities = new HashSet<>();
 
 }

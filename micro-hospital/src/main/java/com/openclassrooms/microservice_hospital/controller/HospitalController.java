@@ -1,11 +1,9 @@
 package com.openclassrooms.microservice_hospital.controller;
 
-import com.openclassrooms.microservice_hospital.domain.HospitalSearchService;
-import com.openclassrooms.microservice_hospital.domain.model.Hospital;
-import com.openclassrooms.microservice_hospital.domain.port.IReturnHospital;
-import com.openclassrooms.microservice_hospital.infra.HospitalFHIRClient;
-import com.openclassrooms.microservice_hospital.infra.HospitalFetcher;
-import com.openclassrooms.microservice_hospital.infra.repository.HospitalRepository;
+import com.openclassrooms.microservice_hospital.domain.fetch.HospitalFetchService;
+import com.openclassrooms.microservice_hospital.domain.fetch.Hospital;
+import com.openclassrooms.microservice_hospital.domain.fetch.IFetchHospital;
+import com.openclassrooms.microservice_hospital.infra.HospitalSpecialityLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,26 +15,17 @@ import java.util.List;
 @RestController
 public class HospitalController {
 
-    IReturnHospital returnHospital;
+    IFetchHospital fetchHospital;
 
     @Autowired
-    HospitalFHIRClient hospitalFHIRClient;
-
-    @Autowired
-    public HospitalController(HospitalSearchService hospitalSearchService) {
-        this.returnHospital = hospitalSearchService;
+    public HospitalController(HospitalFetchService hospitalFetchService) {
+        this.fetchHospital = hospitalFetchService;
     }
 
-
-    @GetMapping(value = "/specialty/{name}")
+    // TODO: mettre le nom dans les parame ?name=
+    @GetMapping(value = "/specialties/{name}")
     public List<Hospital> findHospitalBySpeciality(@PathVariable String name) {
-        return returnHospital.findBySpecialty(name);
+        return fetchHospital.findBySpecialty(name);
     }
 
-    // Pour développement
-    @RequestMapping(value = "/hospital/retrieveall")
-    public String retrieveAllHospitalFromFHIR() {
-        hospitalFHIRClient.retrieveAll();
-        return "Done";
-    }
 }

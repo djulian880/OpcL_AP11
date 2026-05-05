@@ -1,4 +1,4 @@
-package com.openclassrooms.microservice_hospital.domain.model;
+package com.openclassrooms.microservice_hospital.domain.fetch;
 
 import lombok.Getter;
 import lombok.Setter;
