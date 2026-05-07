@@ -1,12 +1,10 @@
-package com.openclassrooms.microservice_hospital.infra.model;
+package com.openclassrooms.microservice_hospital.infra.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -22,15 +20,6 @@ public class HospitalEntity {
 
     @Column(nullable = false)
     private String address;
-/*
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "hospital_specialities",         // nom de la table créée
-            joinColumns = @JoinColumn(name = "hospital_id") // clé étrangère
-    )
-    @Column(name = "speciality")
-    private List<String> specialities = new ArrayList<>();
-*/
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

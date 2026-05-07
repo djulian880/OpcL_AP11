@@ -6,8 +6,8 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.IHttpRequest;
 import ca.uhn.fhir.rest.client.api.IHttpResponse;
 import ca.uhn.fhir.parser.*;
-import com.openclassrooms.microservice_hospital.infra.model.HospitalEntity;
-import com.openclassrooms.microservice_hospital.infra.model.SpecialityEntity;
+import com.openclassrooms.microservice_hospital.infra.entity.HospitalEntity;
+import com.openclassrooms.microservice_hospital.infra.entity.SpecialityEntity;
 import com.openclassrooms.microservice_hospital.infra.repository.HospitalRepository;
 import com.openclassrooms.microservice_hospital.infra.repository.SpecialityRepository;
 import jakarta.annotation.PostConstruct;
@@ -58,8 +58,11 @@ public class HospitalSpecialityLoader {
     @Transactional
     public void init() {
         try {
-            loadSpecialitiesFromFHIR();
-            loadAllHospitals();
+            if(specialityRepository.count() == 0) {
+                loadSpecialitiesFromFHIR();
+                loadAllHospitals();
+            }
+
         } catch (Exception e) {
             System.err.println("Erreur chargement spécialités : " + e.getMessage());
         }

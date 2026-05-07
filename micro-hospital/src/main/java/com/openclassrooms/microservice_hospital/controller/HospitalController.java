@@ -24,4 +24,5 @@ public class HospitalController {
         return fetchHospital.findBySpecialty(name);
     }
 
+    //TODO: envoie liste des spécialités avec code
 }

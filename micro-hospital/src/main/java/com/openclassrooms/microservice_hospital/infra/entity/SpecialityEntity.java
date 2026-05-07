@@ -1,4 +1,4 @@
-package com.openclassrooms.microservice_hospital.infra.model;
+package com.openclassrooms.microservice_hospital.infra.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
