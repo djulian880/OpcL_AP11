@@ -9,7 +9,7 @@ public class SpecialityEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idSpeciality;
 
     @Column(nullable = false, unique = true)
     private String name;

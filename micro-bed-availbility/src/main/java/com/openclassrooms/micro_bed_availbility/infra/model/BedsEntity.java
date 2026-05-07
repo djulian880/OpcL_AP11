@@ -1,5 +1,6 @@
 package com.openclassrooms.micro_bed_availbility.infra.model;
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "bed",
@@ -7,11 +8,12 @@ import jakarta.persistence.*;
                 @UniqueConstraint(columnNames = {"hospital_id", "speciality_id"}) // une seule entrée par couple hôpital/spécialité
         }
 )
+@Data
 public class BedsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idBeds;
 
     @ManyToOne
     @JoinColumn(name = "hospital_id", nullable = false)
