@@ -1,6 +1,6 @@
 package com.openclassrooms.microservice_hospital.infra.repository;
 
-import com.openclassrooms.microservice_hospital.infra.entity.HospitalEntity;
+import com.openclassrooms.microservice_hospital.infra.entity.Hospital;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface HospitalRepository extends JpaRepository<HospitalEntity, Long>  {
+public interface HospitalRepository extends JpaRepository<Hospital, Long>  {
 
     @Query(value = """
         SELECT h.id, h.name, h.address
@@ -18,5 +18,5 @@ public interface HospitalRepository extends JpaRepository<HospitalEntity, Long> 
         JOIN speciality_entity s ON s.id = hs.speciality_id
         WHERE s.name = :name
         """, nativeQuery = true)
-    List<HospitalEntity> findBySpecialityName(@Param("name") String name);
+    List<Hospital> findBySpecialityName(@Param("name") String name);
 }

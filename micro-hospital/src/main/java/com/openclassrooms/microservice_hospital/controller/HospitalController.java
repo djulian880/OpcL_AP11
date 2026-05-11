@@ -19,7 +19,7 @@ public class HospitalController {
         this.fetchHospital = hospitalFetchService;
     }
 
-    @GetMapping(value = "/specialties")
+    @GetMapping(value = "/specialities")
     public List<Hospital> findHospitalBySpeciality(@RequestParam String name) {
         return fetchHospital.findBySpecialty(name);
     }

@@ -6,14 +6,15 @@ import java.util.List;
 
 @Service
 public class HospitalFetchService implements IFetchHospital {
-    private final IHospitalRepository fetchHospital;
 
-    public HospitalFetchService(IHospitalRepository fetchHospital) {
-        this.fetchHospital = fetchHospital;
+    private final IHospitalRepository hospitalRepository;
+
+    public HospitalFetchService(IHospitalRepository hospitalRepository) {
+        this.hospitalRepository = hospitalRepository;
     }
 
     public List<Hospital> findBySpecialty(String specialty){
-        return this.fetchHospital.getBySpeciality(specialty);
+        return this.hospitalRepository.getBySpeciality(specialty);
     }
 
 }

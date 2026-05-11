@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Data
 @ToString
-public class HospitalEntity {
+public class Hospital {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,12 +21,13 @@ public class HospitalEntity {
     @Column(nullable = false)
     private String address;
 
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "hospital_speciality",                          // table de liaison
             joinColumns = @JoinColumn(name = "hospital_id"),       // FK vers hospital
             inverseJoinColumns = @JoinColumn(name = "speciality_id") // FK vers speciality
     )
-    private Set<SpecialityEntity> specialities = new HashSet<>();
+    private Set<Speciality> specialities = new HashSet<>();
 
 }

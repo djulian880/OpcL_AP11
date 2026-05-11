@@ -1,13 +1,13 @@
 package com.openclassrooms.microservice_hospital.infra.repository;
 
-import com.openclassrooms.microservice_hospital.infra.entity.SpecialityEntity;
+import com.openclassrooms.microservice_hospital.infra.entity.Speciality;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface SpecialityRepository extends JpaRepository<SpecialityEntity, Long> {
+public interface SpecialityRepository extends JpaRepository<Speciality, Long> {
 
-    Optional<SpecialityEntity> findByName(String name);
+    Optional<Speciality> findByName(String name);
 }

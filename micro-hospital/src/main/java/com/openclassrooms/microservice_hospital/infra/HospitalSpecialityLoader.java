@@ -6,8 +6,8 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.IHttpRequest;
 import ca.uhn.fhir.rest.client.api.IHttpResponse;
 import ca.uhn.fhir.parser.*;
-import com.openclassrooms.microservice_hospital.infra.entity.HospitalEntity;
-import com.openclassrooms.microservice_hospital.infra.entity.SpecialityEntity;
+import com.openclassrooms.microservice_hospital.infra.entity.Hospital;
+import com.openclassrooms.microservice_hospital.infra.entity.Speciality;
 import com.openclassrooms.microservice_hospital.infra.repository.HospitalRepository;
 import com.openclassrooms.microservice_hospital.infra.repository.SpecialityRepository;
 import jakarta.annotation.PostConstruct;
@@ -133,23 +133,23 @@ public class HospitalSpecialityLoader {
         for(Organization organization : listOrganization){
             ArrayList<String> listSpecialties=retrieveSpecialtiesFromOrganization(organization);
             if(listSpecialties.size()>0){
-                HospitalEntity hospitalEntity = new HospitalEntity();
-                hospitalEntity.setAddress(organization.getAdress());
-                hospitalEntity.setName(organization.getName());
+                Hospital hospital = new Hospital();
+                hospital.setAddress(organization.getAdress());
+                hospital.setName(organization.getName());
 
-                Set<SpecialityEntity> specialities=new HashSet<>();
+                Set<Speciality> specialities=new HashSet<>();
                 for(String speciality : listSpecialties){
 
-                    Optional<SpecialityEntity> optSpecialityEntity = specialityRepository.findByName(speciality);
+                    Optional<Speciality> optSpecialityEntity = specialityRepository.findByName(speciality);
                     if(optSpecialityEntity.isPresent()){
-                        SpecialityEntity specialityEntity = optSpecialityEntity.get();
+                        Speciality specialityEntity = optSpecialityEntity.get();
                         specialities.add(specialityEntity);
                     }
 
                 }
-                hospitalEntity.setSpecialities(specialities);
-                System.out.println(hospitalEntity.toString());
-                hospitalRepository.save(hospitalEntity);
+                hospital.setSpecialities(specialities);
+                System.out.println(hospital.toString());
+                hospitalRepository.save(hospital);
             }
 
         }
@@ -278,10 +278,10 @@ public class HospitalSpecialityLoader {
             CodeSystem codeSystem = parser.parseResource(CodeSystem.class, response.body());
 
             // 3. Extraire les concepts (spécialités)
-            List<SpecialityEntity> specialities = codeSystem.getConcept().stream()
+            List<Speciality> specialities = codeSystem.getConcept().stream()
                     .filter(concept -> concept.getDisplay() != null)
                     .map(concept -> {
-                        SpecialityEntity entity = new SpecialityEntity();
+                        Speciality entity = new Speciality();
                         entity.setCode(concept.getCode());       // ex: "SM06"
                         String display=concept.getDisplay();
 

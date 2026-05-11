@@ -1,8 +1,7 @@
 package com.openclassrooms.microservice_hospital.infra;
 
-import com.openclassrooms.microservice_hospital.domain.fetch.Hospital;
 import com.openclassrooms.microservice_hospital.domain.fetch.IHospitalRepository;
-import com.openclassrooms.microservice_hospital.infra.entity.HospitalEntity;
+import com.openclassrooms.microservice_hospital.infra.entity.Hospital;
 import com.openclassrooms.microservice_hospital.infra.repository.HospitalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +21,11 @@ public class HospitalFetcher implements IHospitalRepository {
     }
 
     @Override
-    public List<Hospital> getBySpeciality(String speciality) {
-        List<Hospital> result=new ArrayList<>();
-        List<HospitalEntity> listeHospitalBDD =hospitalRepository.findBySpecialityName(speciality);
-        for(HospitalEntity hospitalBDD : listeHospitalBDD){
-            Hospital hospital = new Hospital();
+    public List<com.openclassrooms.microservice_hospital.domain.fetch.Hospital> getBySpeciality(String speciality) {
+        List<com.openclassrooms.microservice_hospital.domain.fetch.Hospital> result=new ArrayList<>();
+        List<Hospital> listeHospitalBDD =hospitalRepository.findBySpecialityName(speciality);
+        for(Hospital hospitalBDD : listeHospitalBDD){
+            com.openclassrooms.microservice_hospital.domain.fetch.Hospital hospital = new com.openclassrooms.microservice_hospital.domain.fetch.Hospital();
             hospital.setName(hospitalBDD.getName());
             hospital.setAddress(hospitalBDD.getAddress());
             result.add(hospital);
