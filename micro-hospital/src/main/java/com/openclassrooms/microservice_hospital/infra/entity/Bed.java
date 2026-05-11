@@ -1,0 +1,21 @@
+package com.openclassrooms.microservice_hospital.infra.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.ToString;
+
+@Entity
+@Data
+@ToString
+public class Bed {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private Integer totalNumber;
+
+
+
+
+}
