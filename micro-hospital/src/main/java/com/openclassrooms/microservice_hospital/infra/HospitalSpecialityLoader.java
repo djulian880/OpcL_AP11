@@ -19,6 +19,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.hl7.fhir.r4.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -31,6 +32,7 @@ import java.util.*;
 
 @Service
 @Log4j2
+@Profile("!test")
 public class HospitalSpecialityLoader {
 
     @Autowired
