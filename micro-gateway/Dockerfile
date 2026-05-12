@@ -14,9 +14,5 @@ COPY --from=builder /app/target/*.jar app.jar
 COPY target/classes/application-docker.properties /app/config/application-docker.properties
 
 EXPOSE 8100
-EXPOSE 4100
-EXPOSE 4200
-EXPOSE 4300
-EXPOSE 9102
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
