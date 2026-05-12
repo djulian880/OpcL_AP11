@@ -11,13 +11,4 @@ import java.util.List;
 @Repository
 public interface HospitalRepository extends JpaRepository<Hospital, Long>  {
 
-    @Query(value = """
-        SELECT h.id, h.name, h.address, b.total_number_of_beds
-        FROM hospital h
-        JOIN hospital_speciality hs ON h.id = hs.hospital_id
-        JOIN speciality s ON s.id = hs.speciality_id
-        JOIN bed b ON b.hospital_id = h.id AND b.speciality_id = s.id
-        WHERE s.code = :code
-        """, nativeQuery = true)
-    List<Hospital> findBySpecialityName(@Param("code") String code);
 }

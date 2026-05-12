@@ -1,7 +1,6 @@
 package com.openclassrooms.microservice_hospital.controller;
 
 import com.openclassrooms.microservice_hospital.domain.fetch.*;
-import com.openclassrooms.microservice_hospital.infra.HospitalSpecialityLoader;
 import com.openclassrooms.microservice_hospital.infra.entity.Speciality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

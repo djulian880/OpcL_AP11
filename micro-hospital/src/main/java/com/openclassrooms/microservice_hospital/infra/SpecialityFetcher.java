@@ -1,15 +1,10 @@
 package com.openclassrooms.microservice_hospital.infra;
 
-import com.openclassrooms.microservice_hospital.domain.fetch.Hospital;
 import com.openclassrooms.microservice_hospital.domain.fetch.ISpecialityRepository;
-import com.openclassrooms.microservice_hospital.infra.entity.Bed;
 import com.openclassrooms.microservice_hospital.infra.entity.Speciality;
-import com.openclassrooms.microservice_hospital.infra.repository.BedRepository;
 import com.openclassrooms.microservice_hospital.infra.repository.SpecialityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

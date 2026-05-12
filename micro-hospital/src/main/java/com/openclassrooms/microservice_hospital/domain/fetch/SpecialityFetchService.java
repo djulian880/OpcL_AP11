@@ -1,7 +1,6 @@
 package com.openclassrooms.microservice_hospital.domain.fetch;
 
 import com.openclassrooms.microservice_hospital.infra.entity.Speciality;
-import com.openclassrooms.microservice_hospital.infra.repository.SpecialityRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -14,27 +14,6 @@ import java.util.List;
 @Service
 public class HospitalFetcher implements IHospitalRepository {
 
-    //@Autowired
-    /*HospitalRepository hospitalRepository;
-
-    @Autowired
-    public HospitalFetcher(HospitalRepository hospitalRepository) {
-        this.hospitalRepository = hospitalRepository;
-    }
-*/
-    /*@Override
-    public List<com.openclassrooms.microservice_hospital.domain.fetch.Hospital> getBySpeciality(String speciality) {
-        List<com.openclassrooms.microservice_hospital.domain.fetch.Hospital> result=new ArrayList<>();
-        List<Hospital> listeHospitalBDD =hospitalRepository.findBySpecialityName(speciality);
-        for(Hospital hospitalBDD : listeHospitalBDD){
-            com.openclassrooms.microservice_hospital.domain.fetch.Hospital hospital = new com.openclassrooms.microservice_hospital.domain.fetch.Hospital();
-            hospital.setName(hospitalBDD.getName());
-            hospital.setAddress(hospitalBDD.getAddress());
-            result.add(hospital);
-        }
-        return result;
-    }*/
-
     BedRepository bedRepository;
 
     @Autowired
@@ -43,10 +22,11 @@ public class HospitalFetcher implements IHospitalRepository {
     }
 
     @Override
-    public List<com.openclassrooms.microservice_hospital.domain.fetch.Hospital> getBySpeciality(String speciality) {
+    public List<com.openclassrooms.microservice_hospital.domain.fetch.Hospital> getBySpeciality(String specialityCode) {
         List<com.openclassrooms.microservice_hospital.domain.fetch.Hospital> result=new ArrayList<>();
-        List<Bed> listeHospitalBDD =bedRepository.findBySpecialityCode(speciality);
-        for(Bed bed : listeHospitalBDD){
+
+        List<Bed> listeBed =bedRepository.findBySpecialityCode(specialityCode);
+        for(Bed bed : listeBed){
             com.openclassrooms.microservice_hospital.domain.fetch.Hospital hospital = new com.openclassrooms.microservice_hospital.domain.fetch.Hospital();
             hospital.setName(bed.getHospital().getName());
             hospital.setAddress(bed.getHospital().getAddress());

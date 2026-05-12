@@ -1,8 +1,6 @@
 package com.openclassrooms.microservice_hospital.infra.repository;
 
 import com.openclassrooms.microservice_hospital.infra.entity.Bed;
-import com.openclassrooms.microservice_hospital.infra.entity.Hospital;
-import com.openclassrooms.microservice_hospital.infra.entity.Speciality;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
