@@ -1,6 +1,8 @@
 package com.openclassrooms.microservice_hospital.infra.repository;
 
+import com.openclassrooms.microservice_hospital.infra.entity.Bed;
 import com.openclassrooms.microservice_hospital.infra.entity.Hospital;
+import com.openclassrooms.microservice_hospital.infra.entity.Speciality;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,15 +11,14 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface HospitalRepository extends JpaRepository<Hospital, Long>  {
+public interface BedRepository extends JpaRepository<Bed, Long> {
 
     @Query(value = """
-        SELECT h.id, h.name, h.address, b.total_number_of_beds
-        FROM hospital h
-        JOIN hospital_speciality hs ON h.id = hs.hospital_id
-        JOIN speciality s ON s.id = hs.speciality_id
-        JOIN bed b ON b.hospital_id = h.id AND b.speciality_id = s.id
+        SELECT b.id, b.total_number_of_beds, b.hospital_id, b.speciality_id
+        FROM bed b
+        JOIN hospital h ON h.id=b.hospital_id
+        JOIN speciality s ON b.speciality_id = s.id
         WHERE s.code = :code
         """, nativeQuery = true)
-    List<Hospital> findBySpecialityName(@Param("code") String code);
+    List<Bed> findBySpecialityCode(@Param("code") String code);
 }

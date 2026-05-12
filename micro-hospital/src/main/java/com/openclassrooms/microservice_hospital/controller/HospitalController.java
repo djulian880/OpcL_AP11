@@ -1,9 +1,8 @@
 package com.openclassrooms.microservice_hospital.controller;
 
-import com.openclassrooms.microservice_hospital.domain.fetch.HospitalFetchService;
-import com.openclassrooms.microservice_hospital.domain.fetch.Hospital;
-import com.openclassrooms.microservice_hospital.domain.fetch.IFetchHospital;
+import com.openclassrooms.microservice_hospital.domain.fetch.*;
 import com.openclassrooms.microservice_hospital.infra.HospitalSpecialityLoader;
+import com.openclassrooms.microservice_hospital.infra.entity.Speciality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,15 +13,22 @@ public class HospitalController {
 
     IFetchHospital fetchHospital;
 
+    IFetchSpeciality fetchSpeciality;
+
     @Autowired
-    public HospitalController(HospitalFetchService hospitalFetchService) {
+    public HospitalController(HospitalFetchService hospitalFetchService, SpecialityFetchService specialityFetchService) {
         this.fetchHospital = hospitalFetchService;
+        this.fetchSpeciality = specialityFetchService;
     }
 
     @GetMapping(value = "/specialities")
-    public List<Hospital> findHospitalBySpeciality(@RequestParam String name) {
-        return fetchHospital.findBySpecialty(name);
+    public List<Hospital> findHospitalBySpeciality(@RequestParam String code) {
+        return fetchHospital.findBySpecialty(code);
     }
 
-    //TODO: envoie liste des spécialités avec code
+    @GetMapping(value = "/specialities/all")
+    public List<Speciality> getAllSpeciality() {
+        return fetchSpeciality.getAll();
+    }
+
 }

@@ -13,9 +13,15 @@ public class Bed {
     private Long id;
 
     @Column(nullable = false)
-    private Integer totalNumber;
+    private Integer totalNumberOfBeds;
 
+    @ManyToOne
+    @JoinColumn(name = "hospital_id", nullable = false)
+    private Hospital hospital;
 
+    @ManyToOne
+    @JoinColumn(name = "speciality_id", nullable = false)
+    private Speciality speciality;
 
 
 }

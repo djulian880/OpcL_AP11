@@ -6,8 +6,10 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.IHttpRequest;
 import ca.uhn.fhir.rest.client.api.IHttpResponse;
 import ca.uhn.fhir.parser.*;
+import com.openclassrooms.microservice_hospital.infra.entity.Bed;
 import com.openclassrooms.microservice_hospital.infra.entity.Hospital;
 import com.openclassrooms.microservice_hospital.infra.entity.Speciality;
+import com.openclassrooms.microservice_hospital.infra.repository.BedRepository;
 import com.openclassrooms.microservice_hospital.infra.repository.HospitalRepository;
 import com.openclassrooms.microservice_hospital.infra.repository.SpecialityRepository;
 import jakarta.annotation.PostConstruct;
@@ -35,6 +37,8 @@ public class HospitalSpecialityLoader {
     @Autowired
     SpecialityRepository specialityRepository;
 
+    @Autowired
+    BedRepository bedRepository;
 
     IGenericClient client;
 
@@ -60,14 +64,36 @@ public class HospitalSpecialityLoader {
         try {
             if(specialityRepository.count() == 0) {
                 loadSpecialitiesFromFHIR();
+
+            }
+            if(hospitalRepository.count() == 0) {
                 loadAllHospitals();
             }
+            if(bedRepository.count() == 0) {
+                loadNumberOfBeds();
+            }
+
 
         } catch (Exception e) {
             System.err.println("Erreur chargement spécialités : " + e.getMessage());
         }
     }
 
+
+
+    public void loadNumberOfBeds()  {
+        Random random = new Random();
+        List<Hospital> hospitalList = hospitalRepository.findAll();
+        for(Hospital hospital : hospitalList) {
+            for(Speciality speciality : hospital.getSpecialities()) {
+                Bed bed = new Bed();
+                bed.setHospital(hospital);
+                bed.setSpeciality(speciality);
+                bed.setTotalNumberOfBeds(random.nextInt(0,30)+10);
+                bedRepository.save(bed);
+            }
+        }
+    }
 
 
     public void loadAllHospitals() {
