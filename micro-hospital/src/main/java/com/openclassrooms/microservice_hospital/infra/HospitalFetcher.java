@@ -2,9 +2,7 @@ package com.openclassrooms.microservice_hospital.infra;
 
 import com.openclassrooms.microservice_hospital.domain.fetch.IHospitalRepository;
 import com.openclassrooms.microservice_hospital.infra.entity.Bed;
-import com.openclassrooms.microservice_hospital.infra.entity.Hospital;
 import com.openclassrooms.microservice_hospital.infra.repository.BedRepository;
-import com.openclassrooms.microservice_hospital.infra.repository.HospitalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
