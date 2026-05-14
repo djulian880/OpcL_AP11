@@ -1,17 +1,19 @@
 package com.openclassrooms.micro_bed_availbility.domain.fetch;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
 public class BedFetchService implements IFetchBeds{
 
+
+    @Autowired
+    DistanceCalculatorService distanceCalculatorService;
 
     private final IHospitalRepository hospitalRepository;
     private final IAppointmentRepository appointmentRepository;
@@ -23,7 +25,7 @@ public class BedFetchService implements IFetchBeds{
         this.appointmentRepository = appointmentRepository;
     }
 
-    public Bed fetchFreeBedByNearestHosptialAndSpecialty(String hospital, String speciality) {
+    public Bed fetchFreeBedByNearestHospitalAndSpecialty(String address, String speciality) {
         // Retrieve hospitals with speciality
         List<Hospital> hospitals=hospitalRepository.getHospitals(speciality);
 
@@ -44,9 +46,20 @@ public class BedFetchService implements IFetchBeds{
             }
         }
 
+        TreeMap<Double, Hospital> mapHospitals = new TreeMap<>();
+        for(Hospital freeHosp:freeHospitals){
+            double distance=distanceCalculatorService.calculateDistance(address,freeHosp.getAddress());
+            log.info("Distance avec hopital: "+freeHosp.getName()+" "+distance+" m");
+            mapHospitals.put(distance,freeHosp);
+        }
 
 
-        return null;
+        Bed bed=new Bed();
+        bed.setHospitalAddress(mapHospitals.firstEntry().getValue().getAddress());
+        bed.setHospitalName(mapHospitals.firstEntry().getValue().getName());
+        bed.setSpeciality(speciality);
+
+        return bed;
     }
 }
 

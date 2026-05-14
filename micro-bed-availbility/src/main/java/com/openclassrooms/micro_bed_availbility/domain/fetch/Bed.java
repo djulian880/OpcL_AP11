@@ -8,5 +8,5 @@ import lombok.Setter;
 public class Bed {
     String hospitalName;
     String hospitalAddress;
-    String specialityName;
+    String speciality;
 }

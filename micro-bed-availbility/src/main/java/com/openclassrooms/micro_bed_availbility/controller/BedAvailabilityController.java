@@ -21,7 +21,7 @@ public class BedAvailabilityController {
     @GetMapping(value = "/beds")
     public Bed findFreeBedByNearestHospitalAndSpeciality(@RequestParam String address,
                                                          @RequestParam String speciality) {
-        return fetchBeds.fetchFreeBedByNearestHosptialAndSpecialty(address, speciality);
+        return fetchBeds.fetchFreeBedByNearestHospitalAndSpecialty(address, speciality);
     }
 
 }
