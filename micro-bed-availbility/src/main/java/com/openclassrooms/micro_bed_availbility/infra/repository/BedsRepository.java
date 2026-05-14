@@ -1,13 +1,10 @@
 package com.openclassrooms.micro_bed_availbility.infra.repository;
 
-import com.openclassrooms.micro_bed_availbility.domain.fetch.Beds;
 import com.openclassrooms.micro_bed_availbility.infra.model.BedsEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface BedsRepository extends JpaRepository<BedsEntity, Long> {

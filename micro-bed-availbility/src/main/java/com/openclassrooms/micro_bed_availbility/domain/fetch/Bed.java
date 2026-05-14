@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Beds {
+public class Bed {
     String hospitalName;
+    String hospitalAddress;
     String specialityName;
-    int totalFreeBeds;
 }
