@@ -3,11 +3,15 @@ package com.openclassrooms.micro_bed_availbility.domain.fetch;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 public class Appointment {
-    //TODO: à mettre à jour
-        private String name;
-        private String address;
-        private Integer totalNumberOfBeds;
+    private String firstName;
+    private String lastName;
+    private String speciality;
+    private String hospital;
+    private Date entranceDate;
+    private Date leavingDate;
 }

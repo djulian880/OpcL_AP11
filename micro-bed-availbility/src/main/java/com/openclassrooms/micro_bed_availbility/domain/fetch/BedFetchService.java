@@ -1,5 +1,6 @@
 package com.openclassrooms.micro_bed_availbility.domain.fetch;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -7,22 +8,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Service
 public class BedFetchService implements IFetchBeds{
 
-    private final IBedRepository bedsRepository;
+
     private final IHospitalRepository hospitalRepository;
     private final IAppointmentRepository appointmentRepository;
 
-    public BedFetchService(IBedRepository bedsRepository,
-                           IHospitalRepository hospitalRepository,
+    public BedFetchService(IHospitalRepository hospitalRepository,
                            IAppointmentRepository appointmentRepository) {
-        this.bedsRepository = bedsRepository;
+
         this.hospitalRepository = hospitalRepository;
         this.appointmentRepository = appointmentRepository;
     }
 
-    public List<Bed> fetchFreeBedByNearestHosptialAndSpecialty(String hospital, String speciality) {
+    public Bed fetchFreeBedByNearestHosptialAndSpecialty(String hospital, String speciality) {
         // Retrieve hospitals with speciality
         List<Hospital> hospitals=hospitalRepository.getHospitals(speciality);
 
@@ -32,15 +33,20 @@ public class BedFetchService implements IFetchBeds{
 
         List<Hospital> freeHospitals=new ArrayList<>();
         for(Hospital hosp:hospitals){
+            log.info("Recherche des rdv pour l'hopital: "+hosp.getName()+" / avec la spécialité: "+speciality);
             List<Appointment> appointments=appointmentRepository.getAppointments(hosp.getName(),dateString,speciality);
+            int numberOfBeds=hosp.getTotalNumberOfBeds();
+            int numberOfAppointments=appointments.size();
+            log.info("Nombre totaux de lits: "+numberOfBeds+" / nombre de rendez-vous: "+numberOfAppointments);
             if(hosp.getTotalNumberOfBeds()-appointments.size()>0){
+                log.info("Hopital avec lits libres ajouté: "+hosp.getName());
                 freeHospitals.add(hosp);
             }
         }
 
 
 
-        return this.bedsRepository.getBedsByHospitalAndSpecialty(hospital, speciality);
+        return null;
     }
 }
 
