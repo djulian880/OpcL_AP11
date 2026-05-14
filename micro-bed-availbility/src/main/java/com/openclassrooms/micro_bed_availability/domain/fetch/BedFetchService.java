@@ -1,6 +1,9 @@
 package com.openclassrooms.micro_bed_availability.domain.fetch;
 
+import ca.uhn.fhir.rest.gclient.IUntypedQuery;
+import com.openclassrooms.micro_bed_availability.infra.event.AppointmentEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +20,16 @@ public class BedFetchService implements IFetchBeds{
 
     private final IHospitalRepository hospitalRepository;
     private final IAppointmentRepository appointmentRepository;
+    private final IPublishEvent eventPublisher;
 
     public BedFetchService(IHospitalRepository hospitalRepository,
-                           IAppointmentRepository appointmentRepository) {
+                           IAppointmentRepository appointmentRepository,
+                           IPublishEvent eventPublisher) {
 
         this.hospitalRepository = hospitalRepository;
         this.appointmentRepository = appointmentRepository;
+        this.eventPublisher=eventPublisher;
+
     }
 
     public Bed fetchFreeBedByNearestHospitalAndSpecialty(String address, String speciality) {
@@ -58,6 +65,11 @@ public class BedFetchService implements IFetchBeds{
         bed.setHospitalAddress(mapHospitals.firstEntry().getValue().getAddress());
         bed.setHospitalName(mapHospitals.firstEntry().getValue().getName());
         bed.setSpeciality(speciality);
+
+        eventPublisher.publish(new AppointmentEvent(bed.getHospitalName(),
+                speciality,
+                "booking",
+                dateString));
 
         return bed;
     }
