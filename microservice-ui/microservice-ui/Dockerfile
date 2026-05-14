@@ -1,23 +1,25 @@
-# === Stage 1 : Build ===
 FROM node:20-alpine AS build
 
 WORKDIR /app
 
+# 1. Copie des fichiers de dépendances
 COPY package*.json ./
-RUN npm ci --omit=dev
 
+# 2. Installation
+RUN rm -rf node_modules package-lock.json && \
+    npm cache clean --force && \
+    npm install
+
+# 3. Copie du code source
 COPY . .
+
+# 4. Build
 RUN npm run build --prod
 
-# === Stage 2 : Production (Nginx) ===
+# === Stage final ===
 FROM nginx:alpine
 
-# Copie les fichiers buildés d'Angular
-COPY --from=build /app/dist/<NOM_DE_TON_PROJET> /usr/share/nginx/html
+COPY --from=build /app/dist/microservice-ui /usr/share/nginx/html
 
-# Copie une config nginx personnalisée (optionnel mais recommandé)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 8080
-
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
