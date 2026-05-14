@@ -1,8 +1,8 @@
-package com.openclassrooms.micro_bed_availbility;
+package com.openclassrooms.micro_bed_availability;
 
-import com.openclassrooms.micro_bed_availbility.controller.BedAvailabilityController;
-import com.openclassrooms.micro_bed_availbility.domain.fetch.Bed;
-import com.openclassrooms.micro_bed_availbility.domain.fetch.BedFetchService;
+import com.openclassrooms.micro_bed_availability.controller.BedAvailabilityController;
+import com.openclassrooms.micro_bed_availability.domain.fetch.Bed;
+import com.openclassrooms.micro_bed_availability.domain.fetch.BedFetchService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,8 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.NoSuchElementException;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;

@@ -1,4 +1,4 @@
-package com.openclassrooms.micro_bed_availbility;
+package com.openclassrooms.micro_bed_availability;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,15 +6,15 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableFeignClients("com.openclassrooms.micro_bed_availbility")
+@EnableFeignClients("com.openclassrooms.micro_bed_availability")
 @EnableDiscoveryClient
-public class MicroBedAvailbilityApplication {
+public class MicroBedAvailabilityApplication {
 
 
 
 	public static void main(String[] args) {
 
-		SpringApplication.run(MicroBedAvailbilityApplication.class, args);
+		SpringApplication.run(MicroBedAvailabilityApplication.class, args);
 
 	}
 

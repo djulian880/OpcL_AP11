@@ -1,8 +1,8 @@
-package com.openclassrooms.micro_bed_availbility.infra.proxies;
+package com.openclassrooms.micro_bed_availability.infra.proxies;
 
-import com.openclassrooms.micro_bed_availbility.configuration.FeignClientConfig;
-import com.openclassrooms.micro_bed_availbility.domain.fetch.Appointment;
-import com.openclassrooms.micro_bed_availbility.domain.fetch.Hospital;
+import com.openclassrooms.micro_bed_availability.configuration.FeignClientConfig;
+import com.openclassrooms.micro_bed_availability.domain.fetch.Appointment;
+import com.openclassrooms.micro_bed_availability.domain.fetch.Hospital;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

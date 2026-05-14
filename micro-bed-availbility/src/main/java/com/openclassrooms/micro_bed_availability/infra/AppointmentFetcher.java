@@ -1,8 +1,8 @@
-package com.openclassrooms.micro_bed_availbility.infra;
+package com.openclassrooms.micro_bed_availability.infra;
 
-import com.openclassrooms.micro_bed_availbility.domain.fetch.Appointment;
-import com.openclassrooms.micro_bed_availbility.domain.fetch.IAppointmentRepository;
-import com.openclassrooms.micro_bed_availbility.infra.proxies.MicroGatewayProxy;
+import com.openclassrooms.micro_bed_availability.domain.fetch.Appointment;
+import com.openclassrooms.micro_bed_availability.domain.fetch.IAppointmentRepository;
+import com.openclassrooms.micro_bed_availability.infra.proxies.MicroGatewayProxy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

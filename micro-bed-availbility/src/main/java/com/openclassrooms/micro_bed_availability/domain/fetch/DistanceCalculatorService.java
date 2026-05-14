@@ -1,4 +1,4 @@
-package com.openclassrooms.micro_bed_availbility.domain.fetch;
+package com.openclassrooms.micro_bed_availability.domain.fetch;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +9,6 @@ import com.graphhopper.ResponsePath;
 import com.graphhopper.config.CHProfile;
 import com.graphhopper.config.Profile;
 import com.graphhopper.util.GHUtility;
-import com.graphhopper.util.PointList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

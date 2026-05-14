@@ -1,12 +1,11 @@
-package com.openclassrooms.micro_bed_availbility;
+package com.openclassrooms.micro_bed_availability;
 
-import com.openclassrooms.micro_bed_availbility.domain.fetch.Appointment;
-import com.openclassrooms.micro_bed_availbility.domain.fetch.Bed;
-import com.openclassrooms.micro_bed_availbility.domain.fetch.Hospital;
-import com.openclassrooms.micro_bed_availbility.domain.fetch.IAppointmentRepository;
-import com.openclassrooms.micro_bed_availbility.domain.fetch.IHospitalRepository;
-import com.openclassrooms.micro_bed_availbility.domain.fetch.DistanceCalculatorService;
-import com.openclassrooms.micro_bed_availbility.domain.fetch.BedFetchService;
+import com.openclassrooms.micro_bed_availability.domain.fetch.Appointment;
+import com.openclassrooms.micro_bed_availability.domain.fetch.Hospital;
+import com.openclassrooms.micro_bed_availability.domain.fetch.IAppointmentRepository;
+import com.openclassrooms.micro_bed_availability.domain.fetch.IHospitalRepository;
+import com.openclassrooms.micro_bed_availability.domain.fetch.DistanceCalculatorService;
+import com.openclassrooms.micro_bed_availability.domain.fetch.BedFetchService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -19,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;

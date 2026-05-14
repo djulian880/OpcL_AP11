@@ -1,8 +1,8 @@
-package com.openclassrooms.micro_bed_availbility.controller;
+package com.openclassrooms.micro_bed_availability.controller;
 
-import com.openclassrooms.micro_bed_availbility.domain.fetch.Bed;
-import com.openclassrooms.micro_bed_availbility.domain.fetch.BedFetchService;
-import com.openclassrooms.micro_bed_availbility.domain.fetch.IFetchBeds;
+import com.openclassrooms.micro_bed_availability.domain.fetch.Bed;
+import com.openclassrooms.micro_bed_availability.domain.fetch.BedFetchService;
+import com.openclassrooms.micro_bed_availability.domain.fetch.IFetchBeds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

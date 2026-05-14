@@ -1,4 +1,4 @@
-package com.openclassrooms.micro_bed_availbility.domain.fetch;
+package com.openclassrooms.micro_bed_availability.domain.fetch;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

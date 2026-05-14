@@ -1,4 +1,4 @@
-package com.openclassrooms.micro_bed_availbility.domain.fetch;
+package com.openclassrooms.micro_bed_availability.domain.fetch;
 
 import java.util.List;
 

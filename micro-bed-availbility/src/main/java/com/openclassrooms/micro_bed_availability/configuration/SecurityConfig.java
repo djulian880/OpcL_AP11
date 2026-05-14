@@ -1,4 +1,4 @@
-package com.openclassrooms.micro_bed_availbility.configuration;
+package com.openclassrooms.micro_bed_availability.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
