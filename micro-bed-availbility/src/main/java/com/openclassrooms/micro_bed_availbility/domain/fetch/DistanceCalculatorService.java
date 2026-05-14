@@ -94,7 +94,7 @@ public class DistanceCalculatorService {
             }
 
             JsonNode coords = features.get(0).get("geometry").get("coordinates");
-            log.error("Coordonnées trouvées : " + coords.get(1).asDouble() +"  "+coords.get(0).asDouble() );
+            log.info("Coordonnées trouvées : " + coords.get(1).asDouble() +"  "+coords.get(0).asDouble() );
             return new double[]{ coords.get(1).asDouble(), coords.get(0).asDouble() };
         }
         catch (Exception e) {
