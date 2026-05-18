@@ -9,5 +9,5 @@ public class Hospital {
     private String name;
     private String address;
     private Integer totalNumberOfBeds;
-
+    private Coordinates coordinates;
 }

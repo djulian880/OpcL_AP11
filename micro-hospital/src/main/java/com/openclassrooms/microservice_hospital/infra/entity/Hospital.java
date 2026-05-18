@@ -21,6 +21,8 @@ public class Hospital {
     @Column(nullable = false)
     private String address;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    private Coordinates coordinates;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

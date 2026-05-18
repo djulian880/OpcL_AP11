@@ -1,5 +1,6 @@
 package com.openclassrooms.microservice_hospital.infra;
 
+import com.openclassrooms.microservice_hospital.domain.fetch.Coordinates;
 import com.openclassrooms.microservice_hospital.domain.fetch.IHospitalRepository;
 import com.openclassrooms.microservice_hospital.infra.entity.Bed;
 import com.openclassrooms.microservice_hospital.infra.repository.BedRepository;
@@ -29,6 +30,10 @@ public class HospitalFetcher implements IHospitalRepository {
             hospital.setName(bed.getHospital().getName());
             hospital.setAddress(bed.getHospital().getAddress());
             hospital.setTotalNumberOfBeds(bed.getTotalNumberOfBeds());
+            Coordinates coordinates=new Coordinates();
+            coordinates.setLatitude(bed.getHospital().getCoordinates().getLatitude());
+            coordinates.setLongitude(bed.getHospital().getCoordinates().getLongitude());
+            hospital.setCoordinates(coordinates);
             result.add(hospital);
         }
         return result;
