@@ -6,10 +6,14 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.IHttpRequest;
 import ca.uhn.fhir.rest.client.api.IHttpResponse;
 import ca.uhn.fhir.parser.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.microservice_hospital.infra.entity.Bed;
+import com.openclassrooms.microservice_hospital.infra.entity.Coordinates;
 import com.openclassrooms.microservice_hospital.infra.entity.Hospital;
 import com.openclassrooms.microservice_hospital.infra.entity.Speciality;
 import com.openclassrooms.microservice_hospital.infra.repository.BedRepository;
+import com.openclassrooms.microservice_hospital.infra.repository.CoordinatesRepository;
 import com.openclassrooms.microservice_hospital.infra.repository.HospitalRepository;
 import com.openclassrooms.microservice_hospital.infra.repository.SpecialityRepository;
 import jakarta.annotation.PostConstruct;
@@ -23,9 +27,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
@@ -44,8 +50,13 @@ public class HospitalSpecialityLoader {
     @Autowired
     BedRepository bedRepository;
 
+    @Autowired
+    CoordinatesRepository coordinatesRepository;
+
     IGenericClient client;
 
+    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public HospitalSpecialityLoader(){
         FhirContext ctx = FhirContext.forR4();
@@ -63,7 +74,6 @@ public class HospitalSpecialityLoader {
     }
 
     @PostConstruct
-    @Transactional
     public void init() {
         try {
             if(specialityRepository.count() == 0) {
@@ -155,6 +165,9 @@ public class HospitalSpecialityLoader {
             if(!listSpecialties.isEmpty()){
                 Hospital hospital = new Hospital();
                 hospital.setAddress(organization.getAdress());
+
+                Coordinates hospCoord=coordinatesRepository.save(getCoordinatesFromGeocodeApiGouv(hospital.getAddress()));
+                hospital.setCoordinates(hospCoord);
                 hospital.setName(organization.getName());
 
                 Set<Speciality> specialities=new HashSet<>();
@@ -289,6 +302,36 @@ public class HospitalSpecialityLoader {
         private String adress;
         private String id;
         private String name;
+    }
+
+
+    private Coordinates getCoordinatesFromGeocodeApiGouv(String adresse) {
+        String encoded = URLEncoder.encode(adresse, StandardCharsets.UTF_8);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api-adresse.data.gouv.fr/search/?q=" + encoded + "&limit=1"))
+                .GET()
+                .build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            JsonNode features = mapper.readTree(response.body()).get("features");
+
+            if (features == null || features.isEmpty()) {
+                // throw new RuntimeException("Adresse introuvable : " + adresse);
+                log.error("Adresse introuvable : " + adresse);
+            }
+
+            JsonNode coords = features.get(0).get("geometry").get("coordinates");
+            //log.info("Coordonnées trouvées : " + coords.get(1).asDouble() + "  " + coords.get(0).asDouble());
+
+            Coordinates coordinates = new Coordinates();
+            coordinates.setLatitude(coords.get(1).asDouble());
+            coordinates.setLongitude(coords.get(0).asDouble());
+            //return new double[]{ coords.get(1).asDouble(), coords.get(0).asDouble() };
+            return coordinates;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

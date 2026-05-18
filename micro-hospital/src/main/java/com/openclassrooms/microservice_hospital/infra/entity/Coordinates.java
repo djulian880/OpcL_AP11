@@ -14,8 +14,8 @@ public class Coordinates {
     private Long id;
 
     @Column(nullable = false)
-    String latitude;
+    Double latitude;
 
     @Column(nullable = false)
-    String longitude;
+    Double longitude;
 }
