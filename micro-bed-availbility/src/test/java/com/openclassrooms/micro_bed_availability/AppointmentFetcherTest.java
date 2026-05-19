@@ -50,10 +50,10 @@ class AppointmentFetcherTest {
         @DisplayName("Retourne la liste fournie par le proxy")
         void getAppointments_shouldReturnProxyResult() {
             List<Appointment> expected = List.of(buildAppointment(), buildAppointment());
-            when(microGatewayProxy.getAppointmentBySpecialityAndDateAndHospital(HOSPITAL, DATE, SPECIALITY))
+            when(microGatewayProxy.getAppointments(DATE, SPECIALITY))
                     .thenReturn(expected);
 
-            List<Appointment> result = appointmentFetcher.getAppointments(HOSPITAL, DATE, SPECIALITY);
+            List<Appointment> result = appointmentFetcher.getAppointments(DATE, SPECIALITY);
 
             assertThat(result).isEqualTo(expected).hasSize(2);
         }
@@ -61,10 +61,10 @@ class AppointmentFetcherTest {
         @Test
         @DisplayName("Retourne une liste vide quand le proxy retourne une liste vide")
         void getAppointments_proxyReturnsEmpty_shouldReturnEmpty() {
-            when(microGatewayProxy.getAppointmentBySpecialityAndDateAndHospital(HOSPITAL, DATE, SPECIALITY))
+            when(microGatewayProxy.getAppointments(DATE, SPECIALITY))
                     .thenReturn(Collections.emptyList());
 
-            List<Appointment> result = appointmentFetcher.getAppointments(HOSPITAL, DATE, SPECIALITY);
+            List<Appointment> result = appointmentFetcher.getAppointments(DATE, SPECIALITY);
 
             assertThat(result).isEmpty();
         }
@@ -72,26 +72,26 @@ class AppointmentFetcherTest {
         @Test
         @DisplayName("Délègue exactement les trois paramètres au proxy")
         void getAppointments_shouldDelegateExactParamsToProxy() {
-            when(microGatewayProxy.getAppointmentBySpecialityAndDateAndHospital(HOSPITAL, DATE, SPECIALITY))
+            when(microGatewayProxy.getAppointments(DATE, SPECIALITY))
                     .thenReturn(Collections.emptyList());
 
-            appointmentFetcher.getAppointments(HOSPITAL, DATE, SPECIALITY);
+            appointmentFetcher.getAppointments(DATE, SPECIALITY);
 
             verify(microGatewayProxy, times(1))
-                    .getAppointmentBySpecialityAndDateAndHospital(HOSPITAL, DATE, SPECIALITY);
+                    .getAppointments(DATE, SPECIALITY);
             verifyNoMoreInteractions(microGatewayProxy);
         }
 
         @Test
         @DisplayName("Le proxy est appelé exactement une fois par invocation")
         void getAppointments_shouldCallProxyExactlyOnce() {
-            when(microGatewayProxy.getAppointmentBySpecialityAndDateAndHospital(any(), any(), any()))
+            when(microGatewayProxy.getAppointments(any(), any()))
                     .thenReturn(List.of());
 
-            appointmentFetcher.getAppointments(HOSPITAL, DATE, SPECIALITY);
+            appointmentFetcher.getAppointments(DATE, SPECIALITY);
 
             verify(microGatewayProxy, times(1))
-                    .getAppointmentBySpecialityAndDateAndHospital(any(), any(), any());
+                    .getAppointments(any(), any());
         }
     }
 
@@ -106,10 +106,10 @@ class AppointmentFetcherTest {
         @Test
         @DisplayName("RuntimeException du proxy est propagée sans modification")
         void proxyThrowsRuntimeException_shouldPropagate() {
-            when(microGatewayProxy.getAppointmentBySpecialityAndDateAndHospital(HOSPITAL, DATE, SPECIALITY))
+            when(microGatewayProxy.getAppointments(DATE, SPECIALITY))
                     .thenThrow(new RuntimeException("Feign: connexion refusée"));
 
-            assertThatThrownBy(() -> appointmentFetcher.getAppointments(HOSPITAL, DATE, SPECIALITY))
+            assertThatThrownBy(() -> appointmentFetcher.getAppointments(DATE, SPECIALITY))
                     .isInstanceOf(RuntimeException.class)
                     .hasMessage("Feign: connexion refusée");
         }
@@ -117,10 +117,10 @@ class AppointmentFetcherTest {
         @Test
         @DisplayName("IllegalStateException du proxy est propagée")
         void proxyThrowsIllegalState_shouldPropagate() {
-            when(microGatewayProxy.getAppointmentBySpecialityAndDateAndHospital(HOSPITAL, DATE, SPECIALITY))
+            when(microGatewayProxy.getAppointments(DATE, SPECIALITY))
                     .thenThrow(new IllegalStateException("Service non disponible"));
 
-            assertThatThrownBy(() -> appointmentFetcher.getAppointments(HOSPITAL, DATE, SPECIALITY))
+            assertThatThrownBy(() -> appointmentFetcher.getAppointments(DATE, SPECIALITY))
                     .isInstanceOf(IllegalStateException.class);
         }
     }
@@ -140,23 +140,23 @@ class AppointmentFetcherTest {
             String dateSpecial      = "2024-12-31";
             String specialityUpper  = "CARDIOLOGIE";
 
-            when(microGatewayProxy.getAppointmentBySpecialityAndDateAndHospital(
-                    hospitalSpecial, dateSpecial, specialityUpper))
+            when(microGatewayProxy.getAppointments(
+                    dateSpecial, specialityUpper))
                     .thenReturn(List.of());
 
-            appointmentFetcher.getAppointments(hospitalSpecial, dateSpecial, specialityUpper);
+            appointmentFetcher.getAppointments(dateSpecial, specialityUpper);
 
             verify(microGatewayProxy)
-                    .getAppointmentBySpecialityAndDateAndHospital(hospitalSpecial, dateSpecial, specialityUpper);
+                    .getAppointments(dateSpecial, specialityUpper);
         }
 
         @Test
         @DisplayName("Retourne null si le proxy retourne null (comportement défensif)")
         void proxyReturnsNull_shouldReturnNull() {
-            when(microGatewayProxy.getAppointmentBySpecialityAndDateAndHospital(HOSPITAL, DATE, SPECIALITY))
+            when(microGatewayProxy.getAppointments(DATE, SPECIALITY))
                     .thenReturn(null);
 
-            List<Appointment> result = appointmentFetcher.getAppointments(HOSPITAL, DATE, SPECIALITY);
+            List<Appointment> result = appointmentFetcher.getAppointments(DATE, SPECIALITY);
 
             assertThat(result).isNull();
         }

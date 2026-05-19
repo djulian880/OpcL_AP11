@@ -23,6 +23,8 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class DistanceCalculatorService {
 
+
+
     private GraphHopper hopper;
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
@@ -43,31 +45,18 @@ public class DistanceCalculatorService {
     }
 
 
-    public double calculateDistance(String startAdress, String endAdress) {
-        double[] startCoord=geocodeApiGouv(startAdress);
-        double[] endCoord=geocodeApiGouv(endAdress);
-
-        if(startCoord!=null && endCoord!=null) {
-            return calculate(startCoord[0], startCoord[1], endCoord[0], endCoord[1]);
-        }
-        else{
-            return -1.0;
-        }
-
-    }
-
-    public double calculate(double fromLat, double fromLon, double toLat, double toLon){
+    public double calculateDistance(Coordinates start, Coordinates end){
         GHRequest request = new GHRequest(
-                fromLat, fromLon,
-                toLat, toLon
+                start.getLatitude(), start.getLongitude(),
+                end.getLatitude(), end.getLongitude()
         ).setProfile("car");
 
         GHResponse response = hopper.route(request);
 
         if (!response.hasErrors()) {
             ResponsePath path = response.getBest();
-            log.info("Distance : "+ path.getDistance() / 1000.0);
-            log.info("Durée    : "+  path.getTime() / 60000);
+            //log.info("Distance : "+ path.getDistance() / 1000.0);
+            //log.info("Durée    : "+  path.getTime() / 60000);
             return path.getDistance();
             // Points GPS de l'itinéraire
             //PointList points = path.getPoints();

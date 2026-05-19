@@ -21,14 +21,17 @@ public class BedFetchService implements IFetchBeds{
     private final IHospitalRepository hospitalRepository;
     private final IAppointmentRepository appointmentRepository;
     private final IPublishEvent eventPublisher;
+    private final ICoordinatesRepository coordinatesRepository;
 
     public BedFetchService(IHospitalRepository hospitalRepository,
                            IAppointmentRepository appointmentRepository,
-                           IPublishEvent eventPublisher) {
+                           IPublishEvent eventPublisher,
+                           ICoordinatesRepository coordinatesRepository) {
 
         this.hospitalRepository = hospitalRepository;
         this.appointmentRepository = appointmentRepository;
         this.eventPublisher=eventPublisher;
+        this.coordinatesRepository=coordinatesRepository;
 
     }
 
@@ -43,7 +46,7 @@ public class BedFetchService implements IFetchBeds{
         List<Hospital> freeHospitals=new ArrayList<>();
         for(Hospital hosp:hospitals){
             log.info("Recherche des rdv pour l'hopital: "+hosp.getName()+" / avec la spécialité: "+speciality);
-            List<Appointment> appointments=appointmentRepository.getAppointments(hosp.getName(),dateString,speciality);
+            List<Appointment> appointments=appointmentRepository.getAppointments(dateString,speciality);
             int numberOfBeds=hosp.getTotalNumberOfBeds();
             int numberOfAppointments=appointments.size();
             log.info("Nombre totaux de lits: "+numberOfBeds+" / nombre de rendez-vous: "+numberOfAppointments);
@@ -53,9 +56,12 @@ public class BedFetchService implements IFetchBeds{
             }
         }
 
+        //Find coordinates of start address
+        Coordinates start=coordinatesRepository.getCoordinates(address);
+
         TreeMap<Double, Hospital> mapHospitals = new TreeMap<>();
         for(Hospital freeHosp:freeHospitals){
-            double distance=distanceCalculatorService.calculateDistance(address,freeHosp.getAddress());
+            double distance=distanceCalculatorService.calculateDistance(start,freeHosp.getCoordinates());
             log.info("Distance avec hopital: "+freeHosp.getName()+" "+distance+" m");
             mapHospitals.put(distance,freeHosp);
         }

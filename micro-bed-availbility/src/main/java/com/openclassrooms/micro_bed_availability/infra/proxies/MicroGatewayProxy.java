@@ -12,8 +12,7 @@ import java.util.List;
 @FeignClient(name = "microservice-gateway", url = "${feign.client.url.microservice-gateway}",  configuration = FeignClientConfig.class)
 public interface MicroGatewayProxy {
     @GetMapping(value = "/Appointment/appointments")
-    public List<Appointment> getAppointmentBySpecialityAndDateAndHospital(
-            @RequestParam("hospitalName") String hospitalName,
+    public List<Appointment> getAppointments(
             @RequestParam("date") String date,
             @RequestParam("specialityCode") String speciality
     );

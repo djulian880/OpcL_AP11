@@ -17,9 +17,8 @@ public class AppointmentFetcher implements IAppointmentRepository {
     }
 
     @Override
-    public List<Appointment> getAppointments(String hospitalName, String date, String speciality) {
-        return microGatewayProxy.getAppointmentBySpecialityAndDateAndHospital(
-                hospitalName,
+    public List<Appointment> getAppointments(String date, String speciality) {
+        return microGatewayProxy.getAppointments(
                 date,
                 speciality
         );
