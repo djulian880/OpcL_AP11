@@ -14,3 +14,6 @@
     text-align: center;        /* Centre horizontal */
     vertical-align: middle;    /* Centre vertical */
 }
+.image{
+    height: 150px;
+}
