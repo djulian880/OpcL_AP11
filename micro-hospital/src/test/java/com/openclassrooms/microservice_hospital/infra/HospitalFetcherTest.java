@@ -1,6 +1,7 @@
 package com.openclassrooms.microservice_hospital.infra;
 
 import com.openclassrooms.microservice_hospital.infra.entity.Bed;
+import com.openclassrooms.microservice_hospital.infra.entity.Coordinates;
 import com.openclassrooms.microservice_hospital.infra.entity.Hospital;
 import com.openclassrooms.microservice_hospital.infra.entity.Speciality;
 import com.openclassrooms.microservice_hospital.infra.repository.BedRepository;
@@ -35,10 +36,18 @@ class HospitalFetcherTest {
         Hospital hospital1 = new Hospital();
         hospital1.setName("CHU Strasbourg");
         hospital1.setAddress("1 Rue Molière Strasbourg");
-
+        Coordinates coord1 = new Coordinates();
+        coord1.setLatitude(37.45);
+        coord1.setLongitude(42.12);
+        hospital1.setCoordinates(coord1);
         Hospital hospital2 = new Hospital();
         hospital2.setName("Hôpital Civil");
         hospital2.setAddress("2 Avenue de Gaulle Strasbourg");
+        Coordinates coord2 = new Coordinates();
+        coord2.setLatitude(38.45);
+        coord2.setLongitude(43.12);
+        hospital2.setCoordinates(coord2);
+
 
         Speciality cardio = new Speciality();
         cardio.setCode("SM06");
