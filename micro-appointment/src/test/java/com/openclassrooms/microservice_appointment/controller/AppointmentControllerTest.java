@@ -59,7 +59,7 @@ class AppointmentControllerTest {
     @DisplayName("GET /appointments doit retourner 200 avec la liste des rendez-vous")
     void findAppointment_shouldReturn200WithAppointments() throws Exception {
         // Arrange
-        when(appointmentFetchService.findBySpecialityAndHospitalAndDate("CARDIO", "CHU Lyon", "2024-06-15"))
+        when(appointmentFetchService.findBySpecialityAndHospitalAndDate("CARDIO", "2024-06-15"))
                 .thenReturn(List.of(appointment1, appointment2));
 
         // Act & Assert
@@ -83,7 +83,7 @@ class AppointmentControllerTest {
     @DisplayName("GET /appointments doit retourner une liste vide si aucun résultat")
     void findAppointment_shouldReturn200WithEmptyList_whenNoResults() throws Exception {
         // Arrange
-        when(appointmentFetchService.findBySpecialityAndHospitalAndDate(any(), any(), any()))
+        when(appointmentFetchService.findBySpecialityAndHospitalAndDate( any(), any()))
                 .thenReturn(List.of());
 
         // Act & Assert
@@ -108,7 +108,7 @@ class AppointmentControllerTest {
     @DisplayName("GET /appointments doit transmettre les bons paramètres au service")
     void findAppointment_shouldForwardCorrectParamsToService() throws Exception {
         // Arrange
-        when(appointmentFetchService.findBySpecialityAndHospitalAndDate("PNEUMO", "Hôpital Saint-Louis", "2024-09-10"))
+        when(appointmentFetchService.findBySpecialityAndHospitalAndDate("PNEUMO", "2024-09-10"))
                 .thenReturn(List.of());
 
         // Act
@@ -120,6 +120,6 @@ class AppointmentControllerTest {
 
         // Assert
         verify(appointmentFetchService, times(1))
-                .findBySpecialityAndHospitalAndDate("PNEUMO", "Hôpital Saint-Louis", "2024-09-10");
+                .findBySpecialityAndHospitalAndDate("PNEUMO", "2024-09-10");
     }
 }

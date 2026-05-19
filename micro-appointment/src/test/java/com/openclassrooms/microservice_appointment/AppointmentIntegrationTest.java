@@ -40,14 +40,12 @@ class AppointmentIntegrationTest {
     void findAppointment_shouldReturnMatchingAppointments() throws Exception {
         mockMvc.perform(get("/appointments")
                         .param("specialityCode", "CARDIO")
-                        .param("hospitalName", "CHU Lyon")
                         .param("date", "2024-06-16")   // comprise entre entranceDate et leavingDate du jeu de test
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(greaterThan(0))))
                 .andExpect(jsonPath("$[0].speciality", is("CARDIO")))
-                .andExpect(jsonPath("$[0].hospital", is("CHU Lyon")))
                 .andExpect(jsonPath("$[0].firstName", notNullValue()))
                 .andExpect(jsonPath("$[0].lastName", notNullValue()));
     }
@@ -57,7 +55,6 @@ class AppointmentIntegrationTest {
     void findAppointment_shouldReturnEmptyList_whenNoMatch() throws Exception {
         mockMvc.perform(get("/appointments")
                         .param("specialityCode", "INEXISTANT")
-                        .param("hospitalName", "Hôpital Inconnu")
                         .param("date", "2000-01-01")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -70,7 +67,6 @@ class AppointmentIntegrationTest {
         // Le jeu de test a des RDV du 2024-06-15 au 2024-06-18 → 2020-01-01 ne doit rien donner
         mockMvc.perform(get("/appointments")
                         .param("specialityCode", "CARDIO")
-                        .param("hospitalName", "CHU Lyon")
                         .param("date", "2020-01-01")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -94,7 +90,6 @@ class AppointmentIntegrationTest {
     void findAppointment_shouldReturn400_whenOneParamMissing() throws Exception {
         mockMvc.perform(get("/appointments")
                         .param("specialityCode", "CARDIO")
-                        .param("hospitalName", "CHU Lyon")
                         // date manquante
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());

@@ -19,10 +19,10 @@ public class AppointmentFetcher implements com.openclassrooms.microservice_appoi
     }
 
     @Override
-    public List<com.openclassrooms.microservice_appointment.domain.fetch.Appointment> getBySpecialityAndHospitalAndDate(String specialityCode, String hospitalName, String date) {
+    public List<com.openclassrooms.microservice_appointment.domain.fetch.Appointment> getBySpecialityAndHospitalAndDate(String specialityCode, String date) {
         List<com.openclassrooms.microservice_appointment.domain.fetch.Appointment> result=new ArrayList<>();
 
-        List<Appointment> listAppointments =appointmentRepository.findBySpecialityAndHospitalAndDate(specialityCode,hospitalName,date);
+        List<Appointment> listAppointments =appointmentRepository.findBySpecialityAndHospitalAndDate(specialityCode,date);
         for(Appointment appointmentEntity : listAppointments){
             com.openclassrooms.microservice_appointment.domain.fetch.Appointment appointment = new com.openclassrooms.microservice_appointment.domain.fetch.Appointment();
             appointment.setSpeciality(appointmentEntity.getSpeciality());

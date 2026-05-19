@@ -14,12 +14,10 @@ public interface AppointmentRepository extends JpaRepository<com.openclassrooms.
     @Query(value = """
         SELECT *
         FROM appointment a
-        WHERE a.hospital = :hospitalName
-        AND a.speciality= :specialityCode
+        WHERE a.speciality= :specialityCode
         AND a.entrance_date<= :date
         AND a.leaving_date>= :date
         """, nativeQuery = true)
     List<Appointment> findBySpecialityAndHospitalAndDate(@Param("specialityCode") String specialityCode,
-                                                   @Param("hospitalName") String hospitalName,
                                                    @Param("date") String date);
 }

@@ -55,17 +55,17 @@ class AppointmentFetchServiceTest {
         String specialityCode = "CARDIO";
         String hospitalName = "CHU Lyon";
         String date = "2024-06-15";
-        when(appointmentRepository.getBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date))
+        when(appointmentRepository.getBySpecialityAndHospitalAndDate(specialityCode, date))
                 .thenReturn(List.of(appointment1, appointment2));
 
         // Act
-        List<Appointment> result = appointmentFetchService.findBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date);
+        List<Appointment> result = appointmentFetchService.findBySpecialityAndHospitalAndDate(specialityCode, date);
 
         // Assert
         assertThat(result).hasSize(2);
         assertThat(result).containsExactly(appointment1, appointment2);
         verify(appointmentRepository, times(1))
-                .getBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date);
+                .getBySpecialityAndHospitalAndDate(specialityCode, date);
     }
 
     @Test
@@ -75,16 +75,16 @@ class AppointmentFetchServiceTest {
         String specialityCode = "NEURO";
         String hospitalName = "CHU Paris";
         String date = "2024-01-01";
-        when(appointmentRepository.getBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date))
+        when(appointmentRepository.getBySpecialityAndHospitalAndDate(specialityCode, date))
                 .thenReturn(List.of());
 
         // Act
-        List<Appointment> result = appointmentFetchService.findBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date);
+        List<Appointment> result = appointmentFetchService.findBySpecialityAndHospitalAndDate(specialityCode, date);
 
         // Assert
         assertThat(result).isEmpty();
         verify(appointmentRepository, times(1))
-                .getBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date);
+                .getBySpecialityAndHospitalAndDate(specialityCode, date);
     }
 
     @Test
@@ -94,14 +94,14 @@ class AppointmentFetchServiceTest {
         String specialityCode = "ORTHO";
         String hospitalName = "Hôpital Lariboisière";
         String date = "2024-12-25";
-        when(appointmentRepository.getBySpecialityAndHospitalAndDate(any(), any(), any()))
+        when(appointmentRepository.getBySpecialityAndHospitalAndDate(any(), any()))
                 .thenReturn(List.of());
 
         // Act
-        appointmentFetchService.findBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date);
+        appointmentFetchService.findBySpecialityAndHospitalAndDate(specialityCode, date);
 
         // Assert
-        verify(appointmentRepository).getBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date);
+        verify(appointmentRepository).getBySpecialityAndHospitalAndDate(specialityCode, date);
         verifyNoMoreInteractions(appointmentRepository);
     }
 }

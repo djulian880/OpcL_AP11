@@ -24,6 +24,7 @@ public class EventListener {
     @Autowired
     AppointmentRepository appointmentRepository;
 
+
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue("appointment.queue"),
             exchange = @Exchange("app.exchange"),
@@ -57,7 +58,8 @@ public class EventListener {
             appointment.setLeavingDate(nouvelleDate);
             appointment.setFirstName("Pierre");
             appointment.setLastName("Poljak");
-            appointmentRepository.save(appointment);
+            log.info("Nouveau RDV enregistré: "+appointment.toString());
+;            appointmentRepository.save(appointment);
 
         } catch (ParseException e) {
             log.error(e.getMessage());
@@ -65,4 +67,6 @@ public class EventListener {
 
 
     }
+
+
 }

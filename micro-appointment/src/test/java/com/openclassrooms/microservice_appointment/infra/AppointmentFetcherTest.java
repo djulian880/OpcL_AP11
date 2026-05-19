@@ -58,12 +58,12 @@ class AppointmentFetcherTest {
         String specialityCode = "CARDIO";
         String hospitalName = "CHU Lyon";
         String date = "2024-06-15";
-        when(appointmentRepository.findBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date))
+        when(appointmentRepository.findBySpecialityAndHospitalAndDate(specialityCode, date))
                 .thenReturn(List.of(entityAppointment1));
 
         // Act
         List<com.openclassrooms.microservice_appointment.domain.fetch.Appointment> result =
-                appointmentFetcher.getBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date);
+                appointmentFetcher.getBySpecialityAndHospitalAndDate(specialityCode, date);
 
         // Assert
         assertThat(result).hasSize(1);
@@ -84,12 +84,12 @@ class AppointmentFetcherTest {
         String specialityCode = "CARDIO";
         String hospitalName = "CHU Lyon";
         String date = "2024-06-15";
-        when(appointmentRepository.findBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date))
+        when(appointmentRepository.findBySpecialityAndHospitalAndDate(specialityCode, date))
                 .thenReturn(List.of(entityAppointment1, entityAppointment2));
 
         // Act
         List<com.openclassrooms.microservice_appointment.domain.fetch.Appointment> result =
-                appointmentFetcher.getBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date);
+                appointmentFetcher.getBySpecialityAndHospitalAndDate(specialityCode, date);
 
         // Assert
         assertThat(result).hasSize(2);
@@ -101,12 +101,12 @@ class AppointmentFetcherTest {
     @DisplayName("Doit retourner une liste vide si le repository ne trouve rien")
     void getBySpecialityAndHospitalAndDate_shouldReturnEmptyList_whenRepositoryReturnsNothing() {
         // Arrange
-        when(appointmentRepository.findBySpecialityAndHospitalAndDate(any(), any(), any()))
+        when(appointmentRepository.findBySpecialityAndHospitalAndDate(any(), any()))
                 .thenReturn(List.of());
 
         // Act
         List<com.openclassrooms.microservice_appointment.domain.fetch.Appointment> result =
-                appointmentFetcher.getBySpecialityAndHospitalAndDate("NEURO", "CHU Paris", "2024-01-01");
+                appointmentFetcher.getBySpecialityAndHospitalAndDate("NEURO", "2024-01-01");
 
         // Assert
         assertThat(result).isEmpty();
@@ -119,15 +119,15 @@ class AppointmentFetcherTest {
         String specialityCode = "PNEUMO";
         String hospitalName = "Hôpital Saint-Louis";
         String date = "2024-09-10";
-        when(appointmentRepository.findBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date))
+        when(appointmentRepository.findBySpecialityAndHospitalAndDate(specialityCode, date))
                 .thenReturn(List.of());
 
         // Act
-        appointmentFetcher.getBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date);
+        appointmentFetcher.getBySpecialityAndHospitalAndDate(specialityCode, date);
 
         // Assert
         verify(appointmentRepository, times(1))
-                .findBySpecialityAndHospitalAndDate(specialityCode, hospitalName, date);
+                .findBySpecialityAndHospitalAndDate(specialityCode, date);
         verifyNoMoreInteractions(appointmentRepository);
     }
 }

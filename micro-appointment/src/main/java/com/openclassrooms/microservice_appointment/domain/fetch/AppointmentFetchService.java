@@ -14,7 +14,7 @@ public class AppointmentFetchService implements IFetchAppointment {
     }
 
     @Override
-    public List<Appointment> findBySpecialityAndHospitalAndDate(String specialityCode, String hospitalName, String date) {
-        return this.appointmentRepository.getBySpecialityAndHospitalAndDate(specialityCode, hospitalName,date);
+    public List<Appointment> findBySpecialityAndHospitalAndDate(String specialityCode, String date) {
+        return this.appointmentRepository.getBySpecialityAndHospitalAndDate(specialityCode,date);
     }
 }

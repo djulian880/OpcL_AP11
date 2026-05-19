@@ -20,9 +20,8 @@ public class AppointmentController {
 
     @GetMapping(value = "/appointments")
     public List<Appointment> findAppointment(@RequestParam String specialityCode,
-                                             @RequestParam String hospitalName,
                                              @RequestParam String date) {
-        return fetchAppointment.findBySpecialityAndHospitalAndDate(specialityCode,hospitalName,date);
+        return fetchAppointment.findBySpecialityAndHospitalAndDate(specialityCode,date);
     }
 
 
