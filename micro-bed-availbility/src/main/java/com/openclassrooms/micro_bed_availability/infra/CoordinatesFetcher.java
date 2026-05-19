@@ -23,7 +23,7 @@ public class CoordinatesFetcher implements ICoordinatesRepository {
 
     @Override
     public Coordinates getCoordinates(String address) {
-        Coordinates result = null;
+        Coordinates result=new Coordinates();
 
         String encoded = URLEncoder.encode(address, StandardCharsets.UTF_8);
         HttpRequest request = HttpRequest.newBuilder()
@@ -36,20 +36,20 @@ public class CoordinatesFetcher implements ICoordinatesRepository {
             JsonNode features = mapper.readTree(response.body()).get("features");
 
             if (features == null || features.isEmpty()) {
-
+                log.error("Adresse introuvable");
             }
 
             JsonNode coords = features.get(0).get("geometry").get("coordinates");
-            //log.info("Coordonnées trouvées : " + coords.get(1).asDouble() +"  "+coords.get(0).asDouble() );
+            //log.info("Coordonnées trouvées : "+address+" " + coords.get(1).asDouble() +"  "+coords.get(0).asDouble() );
             result.setLatitude(coords.get(1).asDouble());
             result.setLongitude(coords.get(0).asDouble());
-
-        }
-        catch (Exception e) {
             return result;
         }
+        catch (Exception e) {
+            return null;
+        }
 
-        return result;
+        //return result;
     }
 
 }

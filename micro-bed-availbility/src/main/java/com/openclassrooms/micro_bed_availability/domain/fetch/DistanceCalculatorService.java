@@ -23,12 +23,7 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class DistanceCalculatorService {
 
-
-
     private GraphHopper hopper;
-
-    private final HttpClient httpClient = HttpClient.newHttpClient();
-    private final ObjectMapper mapper = new ObjectMapper();
 
     public DistanceCalculatorService(){
         hopper = new GraphHopper();
@@ -61,34 +56,10 @@ public class DistanceCalculatorService {
             // Points GPS de l'itinéraire
             //PointList points = path.getPoints();
         }
+        else{
+            log.error(response.getErrors().toString());
+        }
         return -1.0;
-    }
-
-
-    private double[] geocodeApiGouv(String adresse)  {
-        String encoded = URLEncoder.encode(adresse, StandardCharsets.UTF_8);
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://api-adresse.data.gouv.fr/search/?q=" + encoded + "&limit=1"))
-                .GET()
-                .build();
-
-        try{
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            JsonNode features = mapper.readTree(response.body()).get("features");
-
-            if (features == null || features.isEmpty()) {
-                // throw new RuntimeException("Adresse introuvable : " + adresse);
-                log.error("Adresse introuvable : " + adresse);
-            }
-
-            JsonNode coords = features.get(0).get("geometry").get("coordinates");
-            log.info("Coordonnées trouvées : " + coords.get(1).asDouble() +"  "+coords.get(0).asDouble() );
-            return new double[]{ coords.get(1).asDouble(), coords.get(0).asDouble() };
-        }
-        catch (Exception e) {
-            return null;
-        }
-
     }
 
 }
