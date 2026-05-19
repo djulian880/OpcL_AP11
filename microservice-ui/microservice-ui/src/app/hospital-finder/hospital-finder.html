@@ -1,26 +1,46 @@
-<div>Spécialité recherchée:</div>
-<div>
-  <select class="selector" [(ngModel)]="selectedSpeciality" id="codeSpeciality">
-    @for (Speciality of listSpecialities; track Speciality.code) {
-      <option [value]="Speciality.code">
-        {{ Speciality.name }}
-      </option>
-    }
-  </select>
-</div>
-<div><input
-  [(ngModel)]="address"
-  type="text"
-  autocomplete="off"
-/></div>
-<div>
-  <button (click)="findBed()">Trouver hopital avec lit disponible</button>
-</div>
-<div *ngIf="bed" class="bed-result">
-  <h3>{{ bed.hospitalName }}</h3>
-  <p><strong>Adresse :</strong> {{ bed.hospitalAddress }}</p>
-</div>
+<body>
+  <div class="main-title">MedHead - POC recherche de lit d'hopital
+    <img src="assets/images/logo.png" alt="Logo">
+  </div>
 
-<div *ngIf="!bed">
-  Aucun lit trouvé
-</div>
+  <span class="center">
+    <table>
+      <tr>
+        <td>Spécialité recherchée:</td>
+        <td>
+          <select class="selector" [(ngModel)]="selectedSpeciality" id="codeSpeciality">
+            @for (Speciality of listSpecialities; track Speciality.code) {
+              <option [value]="Speciality.code">
+                {{ Speciality.name }}
+              </option>
+            }
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Adresse:</td>
+        <td>
+          <input
+          [(ngModel)]="address"
+          type="text"
+          autocomplete="off"
+          />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="text-center">
+          <button (click)="findBed()">Trouver hopital avec lit disponible</button>
+        </td>
+      </tr>
+      <tr >
+        <td colspan="2" class="text-center" *ngIf="bed" class="bed-result">
+          <h3>{{ bed.hospitalName }}</h3>
+        <p><strong>Adresse :</strong> {{ bed.hospitalAddress }}</p>
+        </td>
+        <td colspan="2" *ngIf="!bed">
+          Aucun lit trouvé
+        </td>
+
+    </table>
+  </span>
+</body>
