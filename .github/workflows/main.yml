@@ -5,7 +5,8 @@ on:
     branches:
       - main
       - dev                    
-      - 'dev/**'              
+      - 'dev/**'
+      - 'dev-*' 
     paths:
       - 'eureka-server/**'
       - 'micro-appointment/**'
@@ -56,16 +57,21 @@ jobs:
       matrix:
         include:
           - service: micro-hospital
+            changed: ${{ needs.detect-changes.outputs.hospital }}
           - service: micro-appointment
+            changed: ${{ needs.detect-changes.outputs.appointment }}
           - service: micro-bed-availbility
+            changed: ${{ needs.detect-changes.outputs.bed }}
           - service: gateway
-          - service: eureka   
+            changed: ${{ needs.detect-changes.outputs.gateway }}
+          - service: eureka-server
+            changed: ${{ needs.detect-changes.outputs.eureka }}
     # Exécute le job seulement si au moins un microservice Java a changé
     if: >
       needs.detect-changes.outputs.hospital == 'true' ||
       needs.detect-changes.outputs.appointment == 'true' ||
       needs.detect-changes.outputs.bed == 'true' ||
-      needs.detect-changes.outputs.gateway == 'true'||
+      needs.detect-changes.outputs.gateway == 'true' ||
       needs.detect-changes.outputs.eureka == 'true'
     steps:
       - uses: actions/checkout@v4
@@ -78,7 +84,7 @@ jobs:
           cache: 'maven'
 
       - name: Build & Test ${{ matrix.service }}
-        if: needs.detect-changes.outputs[matrix.service] == 'true'
+        if: matrix.changed == 'true'
         working-directory: ./${{ matrix.service }}
         run: mvn clean verify --no-transfer-progress
 
