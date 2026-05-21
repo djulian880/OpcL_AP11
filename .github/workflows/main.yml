@@ -4,7 +4,13 @@ on:
   push:
     branches:
       - main
-      - dev                    
+      - dev
+      - dev-micro-bed
+      - dev-micro-appointment
+      - dev-micro-eureka
+      - dev-micro-gateway
+      - dev-micro-hospital
+      - dev-micro-ui
       - 'dev/**'
       - 'dev-*' 
     paths:
