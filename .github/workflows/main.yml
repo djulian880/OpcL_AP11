@@ -1,0 +1,104 @@
+name: CI - Microservices
+
+on:
+  push:
+    branches:
+      - main
+      - dev                    
+      - 'dev/**'              
+    paths:
+      - 'eureka-server/**'
+      - 'micro-appointment/**'
+      - 'micro-bed-availbility/**'
+      - 'gateway/**'
+      - 'micro-hospital/**'
+      - 'microservice-ui/**'
+      - '.github/workflows/**'
+
+  pull_request:
+    branches: [ dev, main ]
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      hospital: ${{ steps.filter.outputs.hospital }}
+      appointment: ${{ steps.filter.outputs.appointment }}
+      bed: ${{ steps.filter.outputs.bed }}
+      gateway: ${{ steps.filter.outputs.gateway }}
+      eureka: ${{ steps.filter.outputs.eureka }}
+      ui: ${{ steps.filter.outputs.ui }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Filter changed files
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            hospital:
+              - 'micro-hospital/**'
+            appointment:
+              - 'micro-appointment/**'
+            bed:
+              - 'micro-bed-availbility/**'
+            gateway:
+              - 'gateway/**'
+            eureka:
+              - 'eureka-server/**'
+            ui:
+              - 'microservice-ui/**'
+
+  build-java:
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - service: micro-hospital
+          - service: micro-appointment
+          - service: micro-bed-availbility
+          - service: gateway
+          - service: eureka   
+    # Exécute le job seulement si au moins un microservice Java a changé
+    if: >
+      needs.detect-changes.outputs.hospital == 'true' ||
+      needs.detect-changes.outputs.appointment == 'true' ||
+      needs.detect-changes.outputs.bed == 'true' ||
+      needs.detect-changes.outputs.gateway == 'true'||
+      needs.detect-changes.outputs.eureka == 'true'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK 22
+        uses: actions/setup-java@v4
+        with:
+          java-version: '22'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build & Test ${{ matrix.service }}
+        if: needs.detect-changes.outputs[matrix.service] == 'true'
+        working-directory: ./${{ matrix.service }}
+        run: mvn clean verify --no-transfer-progress
+
+  build-angular:
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    if: needs.detect-changes.outputs.ui == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: microservice-ui/package-lock.json
+
+      - name: Install & Build Angular
+        working-directory: ./microservice-ui
+        run: |
+          npm ci
+          npm run build --prod
