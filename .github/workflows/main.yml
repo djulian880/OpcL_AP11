@@ -57,6 +57,7 @@ jobs:
               - 'microservice-ui/**'
 
   build-java:
+    if: "!contains(github.ref_name, '-ui')"
     needs: detect-changes
     runs-on: ubuntu-latest
     strategy:
