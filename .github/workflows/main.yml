@@ -110,7 +110,7 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       - name: Install & Build Angular
-        working-directory: ./microservice-ui
+        working-directory: ./microservice-ui/microservice-ui
         run: |
           npm ci
           npm run build --prod
