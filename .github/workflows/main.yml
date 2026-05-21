@@ -6,7 +6,7 @@ on:
       - main
       - dev                    
       - 'dev/**'
-      - 'dev-*' 
+      - 'dev*' 
     paths:
       - 'eureka-server/**'
       - 'micro-appointment/**'
