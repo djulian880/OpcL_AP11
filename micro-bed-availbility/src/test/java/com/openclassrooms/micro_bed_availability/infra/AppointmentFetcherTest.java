@@ -1,7 +1,6 @@
-package com.openclassrooms.micro_bed_availability;
+package com.openclassrooms.micro_bed_availability.infra;
 
 import com.openclassrooms.micro_bed_availability.domain.fetch.Appointment;
-import com.openclassrooms.micro_bed_availability.infra.AppointmentFetcher;
 import com.openclassrooms.micro_bed_availability.infra.proxies.MicroGatewayProxy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
