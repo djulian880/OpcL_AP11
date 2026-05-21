@@ -6,7 +6,7 @@
     min-height: 10vh;
 }
 .center {
-    min-height: 90vh;
+    min-height: 50vh;
     display: grid;
     place-items: center;
 }
@@ -14,9 +14,7 @@
     text-align: center;        /* Centre horizontal */
     vertical-align: middle;    /* Centre vertical */
 }
-.image{
-    height: 150px;
-}
+
 .input{
     width: 400px;
 }

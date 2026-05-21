@@ -1,5 +1,4 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { HospitalFinder } from './hospital-finder/hospital-finder';
 
 @Component({
