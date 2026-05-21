@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Utilise MockMvc en mode standalone (sans contexte Spring complet)
  * pour tester uniquement la couche HTTP : mapping, paramètres, sérialisation JSON.
  */
+
 @ExtendWith(MockitoExtension.class)
 @DisplayName("BedAvailabilityController — tests unitaires")
 @WithMockUser
