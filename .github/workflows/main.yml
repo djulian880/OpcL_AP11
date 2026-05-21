@@ -73,7 +73,12 @@ jobs:
           - service: eureka-server
             changed: ${{ needs.detect-changes.outputs.eureka }}
     # Exécute le job seulement si au moins un microservice Java a changé
-    if: matrix.changed == 'true'
+    if: >
+      needs.detect-changes.outputs.hospital == 'true' ||
+      needs.detect-changes.outputs.appointment == 'true' ||
+      needs.detect-changes.outputs.bed == 'true' ||
+      needs.detect-changes.outputs.gateway == 'true' ||
+      needs.detect-changes.outputs.eureka == 'true'
     steps:
       - uses: actions/checkout@v4
 
