@@ -8,7 +8,6 @@ import { Bed } from '../core/bed';
 import { NgIf } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
 
-
 @Component({
   selector: 'app-hospital-finder',
   imports: [FormsModule, NgIf],
@@ -24,14 +23,20 @@ export class HospitalFinder {
   address!: string;
 
   bed!: Bed;
+  bedVoid:Bed=new Bed();
 
   responseTime: number = 0;
 
   constructor(
-    private specialityService: SpecialityService,
-    private bedService: BedService,
-    private cdr: ChangeDetectorRef
-  ) {}
+      private specialityService: SpecialityService,
+      private bedService: BedService,
+      private cdr: ChangeDetectorRef
+    ) {
+    this.bedVoid.hospitalAddress="Pas d'adresse";
+    this.bedVoid.hospitalName="Pas d'hopital";
+    this.bedVoid.speciality="Pas de spécialité";
+
+  }
 
   ngOnInit(): void {
     this.specialities$ = this.specialityService.specialities$;
@@ -43,6 +48,8 @@ export class HospitalFinder {
   findBed(): void {
     const startTime = Date.now();
     this.responseTime=0;
+
+
     this.bedService.findBed(this.selectedSpeciality, this.address).subscribe({
       next: (response: Bed) => {
         const responseTime = Date.now() - startTime;
@@ -54,8 +61,9 @@ export class HospitalFinder {
       },
       error: (error) => {
         const responseTime = Date.now() - startTime;
-        console.error('Erreur:', error);
+        //console.error('Erreur:', error);
         this.responseTime = responseTime;
+        this.bed=this.bedVoid;
         this.cdr.detectChanges();
         //this.response = 'Erreur lors de la demande.';
       },
