@@ -1,6 +1,5 @@
-package com.openclassrooms.micro_bed_availability;
+package com.openclassrooms.micro_bed_availability.controller;
 
-import com.openclassrooms.micro_bed_availability.controller.BedAvailabilityController;
 import com.openclassrooms.micro_bed_availability.domain.fetch.Bed;
 import com.openclassrooms.micro_bed_availability.domain.fetch.BedFetchService;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * Tests unitaires du controller REST BedAvailabilityController.
- *
  * Utilise MockMvc en mode standalone (sans contexte Spring complet)
  * pour tester uniquement la couche HTTP : mapping, paramètres, sérialisation JSON.
  */
@@ -46,6 +44,7 @@ class BedAvailabilityControllerTest {
 
     @BeforeEach
     void setUp() {
+
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
@@ -146,39 +145,6 @@ class BedAvailabilityControllerTest {
         }
     }
 
-    // =========================================================================
-    // 3. ERREURS DU SERVICE
-    // =========================================================================
-/*
-    @Nested
-    @DisplayName("Erreurs propagées depuis le service")
-    class ServiceErrors {
-
-        @Test
-        @DisplayName("Service lance NoSuchElementException → retourne 500")
-        void serviceThrowsNoSuchElement_shouldReturn500() throws Exception {
-            when(bedFetchService.fetchFreeBedByNearestHospitalAndSpecialty(ADDRESS, SPECIALITY))
-                    .thenThrow(new NoSuchElementException("Aucun hôpital disponible"));
-
-            mockMvc.perform(get(URL)
-                            .param("address", ADDRESS)
-                            .param("speciality", SPECIALITY))
-                    .andExpect(status().isInternalServerError());
-        }
-
-        @Test
-        @DisplayName("Service lance RuntimeException générique → retourne 500")
-        void serviceThrowsRuntimeException_shouldReturn500() throws Exception {
-            when(bedFetchService.fetchFreeBedByNearestHospitalAndSpecialty(ADDRESS, SPECIALITY))
-                    .thenThrow(new RuntimeException("Erreur interne"));
-
-            mockMvc.perform(get(URL)
-                            .param("address", ADDRESS)
-                            .param("speciality", SPECIALITY))
-                    .andExpect(status().isInternalServerError());
-        }
-    }
-*/
     // =========================================================================
     // Helper
     // =========================================================================
