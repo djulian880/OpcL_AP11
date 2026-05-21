@@ -19,7 +19,6 @@ import static org.mockito.Mockito.*;
 
 /**
  * Tests unitaires d'AppointmentFetcher.
- *
  * Vérifie que la délégation vers MicroGatewayProxy est correcte :
  * bonne méthode appelée, bons arguments transmis, résultat retourné tel quel.
  */
@@ -135,7 +134,6 @@ class AppointmentFetcherTest {
         @Test
         @DisplayName("Paramètres avec caractères spéciaux — transmis tels quels")
         void specialCharsInParams_shouldBePassedAsIs() {
-            String hospitalSpecial  = "Hôpital Saint-Étienne & Fils";
             String dateSpecial      = "2024-12-31";
             String specialityUpper  = "CARDIOLOGIE";
 
