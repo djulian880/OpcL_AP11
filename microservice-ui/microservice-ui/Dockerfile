@@ -19,7 +19,10 @@ RUN npm run build --prod
 # === Stage final ===
 FROM nginx:alpine
 
-COPY --from=build /app/dist/microservice-ui /usr/share/nginx/html
+COPY --from=build /app/dist/microservice-ui/browser /usr/share/nginx/html
 
-EXPOSE 80
+# Configuration Nginx pour écouter sur 8080 + SPA
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
