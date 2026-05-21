@@ -56,6 +56,9 @@ public class BedFetchService implements IFetchBeds{
                     List<Appointment> appointments = fut2.join();
                     Coordinates start = fut3.join();
                     // Traitement final ici
+                    //log.info("Hopitaux:"+hospitals);
+                    //log.info("Rdvs:"+appointments);
+                    //log.info("Coordonées:"+start);
                     return calcNearest(hospitals, appointments, start);
                 })
                 .join();
@@ -68,9 +71,10 @@ public class BedFetchService implements IFetchBeds{
             new Thread(() -> {
                 publishBooking( speciality, bed, dateString);        // ta méthode
             }).start();
-
+            //log.info("Lit trouvé: "+bed);
             return bed;
         }
+        //log.info("Pas de lit disponible");
         return null;
     }
 
@@ -105,8 +109,11 @@ public class BedFetchService implements IFetchBeds{
 
         Hospital nearestHospital = CompletableFuture.allOf(fut1, fut2)
                 .thenApply(v -> {
+
                     Map<String, Integer> mapAppointments = fut1.join();
                     TreeMap<Double,Hospital> distHospitals = fut2.join();
+                    //log.info("Rdvs triés:"+mapAppointments);
+                    //log.info("distance:"+distHospitals);
                     return findNearestAndFree(distHospitals, mapAppointments);
                 })
                 .join();
@@ -123,6 +130,9 @@ public class BedFetchService implements IFetchBeds{
                 if(nbOfFreeBeds>0){
                     return hospital;
                 }
+            }
+            else{
+                return hospital;
             }
         }
         return null;
