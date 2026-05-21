@@ -64,26 +64,21 @@ jobs:
       matrix:
         include:
           - service: micro-hospital
-            changed: ${{ needs.detect-changes.outputs.hospital }}
+            branch_keyword: 'hospital'
           - service: micro-appointment
-            changed: ${{ needs.detect-changes.outputs.appointment }}
+            branch_keyword: 'appointment'
           - service: micro-bed-availbility
-            changed: ${{ needs.detect-changes.outputs.bed }}
+            branch_keyword: 'bed'
           - service: gateway
-            changed: ${{ needs.detect-changes.outputs.gateway }}
+            branch_keyword: 'gateway'
           - service: eureka-server
-            changed: ${{ needs.detect-changes.outputs.eureka }}
-    # Exécute le job seulement si au moins un microservice Java a changé
-    if: >
-      needs.detect-changes.outputs.hospital == 'true' ||
-      needs.detect-changes.outputs.appointment == 'true' ||
-      needs.detect-changes.outputs.bed == 'true' ||
-      needs.detect-changes.outputs.gateway == 'true' ||
-      needs.detect-changes.outputs.eureka == 'true'
+            branch_keyword: 'eureka'
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup JDK 22
+        if: "github.ref_name == 'main' || github.ref_name == 'dev' || contains(github.ref_name, matrix.branch_keyword)"
         uses: actions/setup-java@v4
         with:
           java-version: '22'
@@ -91,6 +86,7 @@ jobs:
           cache: 'maven'
 
       - name: Build & Test ${{ matrix.service }}
+        if: "github.ref_name == 'main' || github.ref_name == 'dev' || contains(github.ref_name, matrix.branch_keyword)"
         working-directory: ./${{ matrix.service }}
         run: mvn clean verify --no-transfer-progress
 
