@@ -25,6 +25,8 @@ export class HospitalFinder {
 
   bed!: Bed;
 
+  responseTime: number = 0;
+
   constructor(
     private specialityService: SpecialityService,
     private bedService: BedService,
@@ -39,18 +41,25 @@ export class HospitalFinder {
   }
 
   findBed(): void {
+    const startTime = Date.now();
+    this.responseTime=0;
     this.bedService.findBed(this.selectedSpeciality, this.address).subscribe({
       next: (response: Bed) => {
+        const responseTime = Date.now() - startTime;
         this.bed = response as Bed; // garde l'objet tel quel
-        console.log('Réponse reçue:', response);
-        console.log('this.bed:', this.bed);
+        //console.log('Réponse reçue:', response);
+        //console.log('this.bed:', this.bed);
+        this.responseTime = responseTime;
         this.cdr.detectChanges();
       },
       error: (error) => {
+        const responseTime = Date.now() - startTime;
         console.error('Erreur:', error);
+        this.responseTime = responseTime;
         this.cdr.detectChanges();
         //this.response = 'Erreur lors de la demande.';
       },
     });
   }
+
 }

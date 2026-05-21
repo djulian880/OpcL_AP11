@@ -21,7 +21,7 @@
       <tr>
         <td>Adresse:</td>
         <td>
-          <input
+          <input class="input"
           [(ngModel)]="address"
           type="text"
           autocomplete="off"
@@ -41,7 +41,14 @@
         <td colspan="2" *ngIf="!bed">
           Aucun lit trouvé
         </td>
-
+      <tr>
+      <td colspan="2" class="text-center">
+        <div *ngIf="responseTime">
+          <strong>Temps de réponse :</strong>
+            {{ responseTime }} ms
+        </div>
+      </td>
+    </tr>
     </table>
   </span>
 </body>
