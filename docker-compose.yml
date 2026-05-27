@@ -1,0 +1,89 @@
+name: MedilaboSolution
+
+services:
+  eureka-server:
+    build:
+      context: ./eureka-server/
+    ports:
+      - 9102:9102
+    restart: always
+    container_name: eureka-server
+    networks: 
+       - my-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  microservice-hospital:
+    build:
+      context: ./micro-hospital/
+    ports:
+      - 4200:4200
+    container_name: micro-hospital
+    restart: always
+    depends_on: 
+      - eureka-server
+    networks: 
+       - my-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  microservice-appointment:
+    build:
+      context: ./micro-appointment/
+    ports:
+      - 4100:4100
+    container_name: micro-appointment
+    restart: always
+    depends_on: 
+      - eureka-server
+    networks: 
+       - my-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      
+  microservice-bed-availability:
+    build:
+      context: ./micro-bed-availbility/
+    ports:
+      - 4300:4300
+    container_name: micro-bed-availbility
+    restart: always
+    depends_on: 
+      - eureka-server
+    networks: 
+       - my-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      
+  microservice-gateway:
+    build:
+      context: ./micro-gateway/
+    ports:
+      - 8100:8100
+    container_name: micro-gateway
+    restart: always
+    depends_on: 
+      - eureka-server
+    networks: 
+       - my-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      
+  microservice-client-ui:
+    build:
+      context: ./microservice-ui/microservice-ui/
+    container_name: microservice-ui
+    networks: 
+       - my-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on: 
+      - eureka-server
+            
+networks:
+  my-network:
+    driver: bridge
