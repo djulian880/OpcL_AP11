@@ -3,19 +3,16 @@ WORKDIR /app
 COPY .mvn ./.mvn
 COPY mvnw .
 COPY pom.xml .
-COPY alsace-260512.osm.pbf /app/alsace-260512.osm.pbf
 COPY src ./src
 RUN ./mvnw clean package -DskipTests
 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
-COPY --from=builder /app/alsace-260512.osm.pbf /app/alsace-260512.osm.pbf
+COPY --from=builder /app/target/*.jar app.jar
 
 # Copier le fichier application-docker.properties
 COPY target/classes/application-docker.properties /app/config/application-docker.properties
-
-RUN ls -la /app
 
 EXPOSE 4300
 
