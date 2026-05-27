@@ -1,0 +1,28 @@
+package com.openclassrooms.micro_bed_availability.infra.proxies;
+
+import com.openclassrooms.micro_bed_availability.configuration.FeignClientConfig;
+import com.openclassrooms.micro_bed_availability.domain.fetch.Appointment;
+import com.openclassrooms.micro_bed_availability.domain.fetch.Hospital;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+
+@FeignClient(name = "microservice-gateway", url = "${feign.client.url.microservice-gateway}",  configuration = FeignClientConfig.class)
+public interface MicroGatewayProxy {
+    @GetMapping(value = "/Appointment/appointments")
+    public List<Appointment> getAppointments(
+            @RequestParam("date") String date,
+            @RequestParam("specialityCode") String speciality
+    );
+
+    @GetMapping(value = "/Hospital/specialities")
+    public List<Hospital> getHospitalBySpeciality(
+            @RequestParam("code") String specialityCode
+    );
+
+
+}
+
+
