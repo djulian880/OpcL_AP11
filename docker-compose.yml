@@ -1,6 +1,12 @@
 name: MedilaboSolution
 
 services:
+  rabbitMQ:
+    image: rabbitmq:management
+    container_name: rabittmq-server
+    ports:
+      - 15672:15672
+      - 5672:5672
   eureka-server:
     build:
       context: ./eureka-server/
