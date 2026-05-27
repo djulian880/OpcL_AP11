@@ -17,7 +17,7 @@ on:
       - 'eureka-server/**'
       - 'micro-appointment/**'
       - 'micro-bed-availbility/**'
-      - 'gateway/**'
+      - 'micro-gateway/**'
       - 'micro-hospital/**'
       - 'microservice-ui/**'
       - '.github/workflows/**'
@@ -50,7 +50,7 @@ jobs:
             bed:
               - 'micro-bed-availbility/**'
             gateway:
-              - 'gateway/**'
+              - 'micro-gateway/**'
             eureka:
               - 'eureka-server/**'
             ui:
