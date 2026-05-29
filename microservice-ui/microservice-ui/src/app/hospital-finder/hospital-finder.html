@@ -1,0 +1,58 @@
+<body>
+  <div class="main-title"><img class="image" ngSrc="assets/images/logo.png" alt="Logo" height="150" width="374">
+    MedHead - POC recherche de lit d'hopital
+  </div>
+
+  <span class="center">
+    <table>
+      <tr>
+        <td>Spécialité recherchée:</td>
+        <td>
+          <select class="selector" [(ngModel)]="selectedSpeciality" id="codeSpeciality">
+            @for (Speciality of listSpecialities; track Speciality.code) {
+              <option [value]="Speciality.code">
+                {{ Speciality.name }}
+              </option>
+            }
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Adresse:</td>
+        <td>
+          <input class="input"
+          [(ngModel)]="address"
+          type="text"
+          autocomplete="off"
+          />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="text-center">
+          <button (click)="findBed()">Trouver hopital avec lit disponible</button>
+        </td>
+      </tr>
+      <tr >
+
+          @if(bed){
+            <td colspan="2" class="text-center" >
+            <h3 class="bed-result">{{ bed.hospitalName }}</h3>
+            <p><strong>Adresse :</strong> {{ bed.hospitalAddress }}</p>
+            </td>
+          }
+        @else{
+          <td colspan="2">
+            Aucun lit trouvé
+          </td>
+        }
+      <tr>
+      <td colspan="2" class="text-center">
+        <div>
+          <strong>Temps de réponse :</strong>
+            {{ responseTime }} ms
+        </div>
+      </td>
+    </tr>
+    </table>
+  </span>
+</body>

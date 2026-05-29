@@ -1,0 +1,21 @@
+.main-title{
+    font-size: 36px;
+    font-weight: bold;
+    display: grid;
+    place-items: center;
+    min-height: 10vh;
+}
+.center {
+    min-height: 50vh;
+    display: grid;
+    place-items: center;
+}
+.text-center {
+    text-align: center;        /* Centre horizontal */
+    vertical-align: middle;    /* Centre vertical */
+}
+
+.input{
+    width: 400px;
+}
+
