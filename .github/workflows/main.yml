@@ -57,6 +57,7 @@ jobs:
               - 'microservice-ui/**'
 
   build-java:
+    if: "!contains(github.ref_name, '-ui')"
     needs: detect-changes
     runs-on: ubuntu-latest
     strategy:
@@ -68,7 +69,7 @@ jobs:
             branch_keyword: 'appointment'
           - service: micro-bed-availbility
             branch_keyword: 'bed'
-          - service: gateway
+          - service: micro-gateway
             branch_keyword: 'gateway'
           - service: eureka-server
             branch_keyword: 'eureka'
