@@ -4,20 +4,13 @@ on:
   push:
     branches:
       - main
-      - dev
-      - dev-micro-bed
-      - dev-micro-appointment
-      - dev-micro-eureka
-      - dev-micro-gateway
-      - dev-micro-hospital
-      - dev-micro-ui
-      - 'dev/**'
-      - 'dev-*' 
+      - dev                    
+      - 'dev/**'              
     paths:
       - 'eureka-server/**'
       - 'micro-appointment/**'
       - 'micro-bed-availbility/**'
-      - 'micro-gateway/**'
+      - 'gateway/**'
       - 'micro-hospital/**'
       - 'microservice-ui/**'
       - '.github/workflows/**'
@@ -50,35 +43,34 @@ jobs:
             bed:
               - 'micro-bed-availbility/**'
             gateway:
-              - 'micro-gateway/**'
+              - 'gateway/**'
             eureka:
               - 'eureka-server/**'
             ui:
               - 'microservice-ui/**'
 
   build-java:
-    if: "!contains(github.ref_name, '-ui')"
     needs: detect-changes
     runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
           - service: micro-hospital
-            branch_keyword: 'hospital'
           - service: micro-appointment
-            branch_keyword: 'appointment'
           - service: micro-bed-availbility
-            branch_keyword: 'bed'
-          - service: micro-gateway
-            branch_keyword: 'gateway'
-          - service: eureka-server
-            branch_keyword: 'eureka'
-    
+          - service: gateway
+          - service: eureka   
+    # Exécute le job seulement si au moins un microservice Java a changé
+    if: >
+      needs.detect-changes.outputs.hospital == 'true' ||
+      needs.detect-changes.outputs.appointment == 'true' ||
+      needs.detect-changes.outputs.bed == 'true' ||
+      needs.detect-changes.outputs.gateway == 'true'||
+      needs.detect-changes.outputs.eureka == 'true'
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup JDK 22
-        if: "github.ref_name == 'main' || github.ref_name == 'dev' || contains(github.ref_name, matrix.branch_keyword)"
         uses: actions/setup-java@v4
         with:
           java-version: '22'
@@ -86,7 +78,7 @@ jobs:
           cache: 'maven'
 
       - name: Build & Test ${{ matrix.service }}
-        if: "github.ref_name == 'main' || github.ref_name == 'dev' || contains(github.ref_name, matrix.branch_keyword)"
+        if: needs.detect-changes.outputs[matrix.service] == 'true'
         working-directory: ./${{ matrix.service }}
         run: mvn clean verify --no-transfer-progress
 
@@ -103,10 +95,10 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+          cache-dependency-path: microservice-ui/package-lock.json
 
       - name: Install & Build Angular
-        working-directory: ./microservice-ui/microservice-ui
+        working-directory: ./microservice-ui
         run: |
           npm ci
           npm run build --prod
