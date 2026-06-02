@@ -6,10 +6,13 @@ Ce démonstrateur a pour but de démonter la faisabilité technique d'une archit
 Le scénario est le suivant: le système d'intervention d'urgence en temps réel est destiné à suggérer l'hôpital le plus proche offrant un lit disponible et possédant la spécialisation attendue sur la base d’une banque de données d'informations récentes sur les hôpitaux.
 
 Par exemple, SUPPOSONS trois hôpitaux, comme suit :
-| Hopital | Lits disponibles | Spécialisations |
-| Hopita Fred Brooks | 2 | Cardiologie, immunologie |
-| Hopital Julia Crusher | 0 | Cardiologie |
-| Hopital Beverly Bashir | 5 | Immunologie, neuropathologie, diagnostic |
+
+| Hopital               | Lits disponibles | Spécialisations                           |
+| Hopita Fred Brooks    | 2                | Cardiologie, immunologie                  |
+| Hopital Julia Crusher | 0                | Cardiologie                               |
+| Hopital Beverly Bashir| 5                | Immunologie, neuropathologie, diagnostic  |
+
+
 ET un patient nécessitant des soins en cardiologie,
 QUAND un patient demande des soins en cardiologie ET que l'urgence est localisée
 près de l'hôpital Fred Brooks,
@@ -18,16 +21,24 @@ ET un événement devrait être publié pour réserver un lit.
 
 # Architecture de la POC
 L'architecture micro-service est présentée ci-dessous:
-![Texte alternatif](micro.jpg "Diagramme de composants de la POC")
+
+![Diagramme de composants de la POC](Micro.jpg "Diagramme de composants de la POC")
+
 Le micro-service Appointment fournit la liste des lits actuellement réservés et enregistre les nouvelles réservations publiées sur le bus d'évènement.
 Le micro-service Hospital fournit la liste des hopitaux par spécialité et le nombre total de lits disponibles. A la première exécution il récupère les données concernant les hopitaux et la liste des spécialités sur l'API publique FHIR esante.gouv.fr.
+
+
 Le micro-service Bed-availability contient l'algorithme qui va choisir l'hopital le plus proche. Il récupère la liste des hopitaux disposant de la spécialitée demandée auprès du microservice Hospital, la liste des réservations pour la date du jour et la spécialité demandée auprès du microservice Appointement.
 Il récupère les données de localisation de l'adresse demandée auprès de l'api publique  api-adresse.data.gouv.fr.
 Il calcule la distance entre les hopitaux et l'adresse demandée grâce à la librairie GraphHopper.
 A partir de ces données il en déduit l'hopital le plus proche qui possède encore des lits disponibles pour cette spécialité et publie sur le bus d'évènement une réservation concernant l'hopital et la spécialité demandée.
 
+
 La gateway redirige les requêtes entre les micro-services.
+
+
 Le micro-service Eureka enregistre les micro-services déployés et assure leur monitoring.
+
 
 Le micro-service client-ui est l'interface graphique développée avec Angular pour l'envoi d'une demande de recherche d'hopital.
 
