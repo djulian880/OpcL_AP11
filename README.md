@@ -7,10 +7,11 @@ Le scénario est le suivant: le système d'intervention d'urgence en temps réel
 
 Par exemple, SUPPOSONS trois hôpitaux, comme suit :
 
-| Hopital               | Lits disponibles | Spécialisations                           |
-| Hopita Fred Brooks    | 2                | Cardiologie, immunologie                  |
-| Hopital Julia Crusher | 0                | Cardiologie                               |
-| Hopital Beverly Bashir| 5                | Immunologie, neuropathologie, diagnostic  |
+| Hopital | Lits disponibles |Spécialisations  |
+|--|--|--|
+| Hopital Fred Brooks | 2 | Cardiologie, immunologie |
+| Hopital Julia Crusher | 0 | Cardiologie |
+| Hopital Beverly Bashir | 5 | Immunologie, neuropathologie, diagnostic |
 
 
 ET un patient nécessitant des soins en cardiologie,
