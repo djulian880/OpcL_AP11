@@ -26,6 +26,7 @@ L'architecture micro-service est présentée ci-dessous:
 ![Diagramme de composants de la POC](Micro.jpg "Diagramme de composants de la POC")
 
 Le micro-service Appointment fournit la liste des lits actuellement réservés et enregistre les nouvelles réservations publiées sur le bus d'évènement.
+
 Le micro-service Hospital fournit la liste des hopitaux par spécialité et le nombre total de lits disponibles. A la première exécution il récupère les données concernant les hopitaux et la liste des spécialités sur l'API publique FHIR esante.gouv.fr.
 
 
@@ -56,10 +57,18 @@ Chaque micro-service dispose d'un fichier Dockerfile pour la création d'une ima
 
 # Librairies utilisées:
 
-Graphhopper est utilisé pour le calcul des distances entre les hopitaux et le lieu de l'urgence. La librairie est comprise en tant que dépendance dans le pom du micro-service bed-availability. Un fichier de carte OpenStreetMap est nécessaire pour fournir les données de géolocalisation à la librairie. Le repository contient les données pour l'Alsace, si on veut utiliser d'autres données il faut télécharger un fichier cartographique sur le site web suivant: https://download.geofabrik.de/ au format OSM. Le nom du fichier est écrit directement dans la classe DistanceCalculatorService du domain. Le fichier doit être déposé directement dans le répertoire micro-bed-availbility/.
+Graphhopper est utilisé pour le calcul des distances entre les hopitaux et le lieu de l'urgence. La librairie est comprise en tant que dépendance dans le pom du micro-service bed-availability. 
+Un fichier de carte OpenStreetMap est nécessaire pour fournir les données de géolocalisation à la librairie. Le repository contient les données pour l'Alsace, si on veut utiliser d'autres données il faut télécharger un fichier cartographique sur le site web suivant: https://download.geofabrik.de/ au format OSM. 
+Le nom du fichier est écrit directement dans la classe DistanceCalculatorService du domain. 
+Le fichier doit être déposé directement dans le répertoire micro-bed-availbility/.
+
 La librairie GraphHopper utilise des coordonnées en Latitude/Longitude pour faire ses calculs, l'adresse postale doit être préalablement convertie en coordonées géographiques pour la bonne marche de la librairie, pour ce faire une requête est envoyéee à l'API publique api-adresse.data.gouv.fr qui renvoie les coordonées à partir d'une adresse géographique.
 
-Au premier démarrage du micro-service Hospital, un loader va s'éxecuter pour récupérer la liste des hopitaux disponibles dans la région Alsace, et remplir la liste des spécialités médicales. Cette procédure est assez longue et peut prendre plusieurs minutes en fonction du volume de données à récupérer. La région pour laquelle les données sont sollicitées est spécifiée dans la requête envoyée par la procédure loadAllHospitals de la classe HospitalSpecialityLoader dans l'infra. Cette procédure est exécutée uniquement si la base de données est vide, si des données sont présentes cette procédure n'est pas lancée pour économiser le temps d'exécution.
+Au premier démarrage du micro-service Hospital, un loader va s'éxecuter pour récupérer la liste des hopitaux disponibles dans la région Alsace, et remplir la liste des spécialités médicales. 
+Cette procédure est assez longue et peut prendre plusieurs minutes en fonction du volume de données à récupérer. 
+La région pour laquelle les données sont sollicitées est spécifiée dans la requête envoyée par la procédure loadAllHospitals de la classe HospitalSpecialityLoader dans l'infra. 
+
+Cette procédure est exécutée uniquement si la base de données est vide, si des données sont présentes cette procédure n'est pas lancée pour économiser le temps d'exécution.
 
 # Installation et lancement
 Docker doit être installé et configuré sur la machine.
